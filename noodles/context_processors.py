@@ -1,7 +1,18 @@
 """
 Available context processors for django-noodles
 """
+from django.conf import settings
+
 from noodles.models import SiteMeta
+
+def static_paths(request):
+    """
+    """
+    return {
+        "IMG": "%s%s/" % (settings.STATIC_URL, "img"),
+        "JS": "%s%s/" % (settings.STATIC_URL, "js"),
+        "CSS": "%s%s/" % (settings.STATIC_URL, "css")
+    }
 
 def site_meta(request):
     """
