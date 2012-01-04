@@ -3,15 +3,30 @@ Utilites
 """
 
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.conf import settings
 
-def make_paginator(request, qs, per_page=5):
+def get_email_send_to_list():
+    """
+    Returns a list of addresses to send correspondance to
+    """
+    email_list = []
+    
+    try:
+        email_list = settings.NOODLES_EMAIL_LIST
+    except AttributeError:
+        email_list = [email for name, email in settings.ADMINS]
+    
+    return email_list
+    
+
+def make_paginator(request, queryset, per_page=5):
     """
     Return a paginated object list
     
     Centralizes how many items per page
     """
     
-    paginator = Paginator(qs, per_page)
+    paginator = Paginator(queryset, per_page)
     
     try:
         page = int(request.GET.get('page', '1'))
