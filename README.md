@@ -9,6 +9,7 @@ Website Metadata
 
 Contact Submission
 ------------------
+NOODLES_EMAIL_LIST = []
 
 Abstract Models
 ---------------
