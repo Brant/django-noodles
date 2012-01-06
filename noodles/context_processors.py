@@ -14,18 +14,25 @@ def static_paths(request):
         "CSS": "%s%s/" % (settings.STATIC_URL, "css")
     }
     
+
+THIS_SITE = Site.objects.get_current()
 def site(request):
     """
     Return site.name and site.domain as a URL
     """
-    site = Site.objects.get_current()
+    
     return {
-        "SITE_NAME": site.name,
-        "SITE_URL": "http://%s/" % site.domain
+        "SITE_NAME": THIS_SITE.name,
+        "SITE_URL": "http://%s/" % THIS_SITE.domain
     }
     
     
 
+meta = SiteMeta.objects.all()
+SITE_META = {}
+for data in meta:
+    SITE_META.update({data.key: data.value})
+    
 def site_meta(request):
     """
     Make metadata available as a context processor
@@ -33,11 +40,6 @@ def site_meta(request):
     available like this:
         {{ SITE_META.key }}
     """
-    meta = SiteMeta.objects.all()
     
-    SITE_META = {}
-    
-    for data in meta:
-        SITE_META.update({data.key: data.value})
         
     return {'SITE_META': SITE_META}
