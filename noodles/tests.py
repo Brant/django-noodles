@@ -3,19 +3,11 @@ Noodles Tests
 """
 from datetime import datetime
 from django.test import TestCase
-from noodles.models import TitleDateSlug, ActiveToggler
 
-class TitleDateSlugConcrete(TitleDateSlug):
-    """
-    Concreate class to test against
-    """
-    pass
 
-class ActiveTogglerConcrete(ActiveToggler):
-    """
-    Concrete class to test against
-    """
-    pass 
+from noodles.testing.models import *
+
+
 
 class ActiveTogglerTestCase(TestCase):
     """
