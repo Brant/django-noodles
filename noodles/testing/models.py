@@ -1,20 +1,21 @@
 from noodles.models import TitleDateSlug, ActiveToggler
 
-
 class TitleDateSlugConcrete(TitleDateSlug):
     """
     Concreate class to test against
     """
-    pass
-
     class Meta:
-        db_table = "noodles_titledateslugconcrete"
+        """
+        Django metadata
+        """
+        app_label = "noodles"
 
 class ActiveTogglerConcrete(ActiveToggler):
     """
     Concrete class to test against
     """
-    pass 
-    
     class Meta:
-        db_table = "noodles_activetogglerconcrete"
+        """
+        Django metadata
+        """
+        app_label = "noodles"
