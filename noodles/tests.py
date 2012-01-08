@@ -13,25 +13,44 @@ class FakeRequest(object):
     to mimic a request object
     """
     def __init__(self, path):
-        self.path = path 
+        self.path = unicode(path) 
 
 class InsideNavTestCase(TestCase):
     urls = "noodles.testing.urls"
     
     def setUp(self):
         """
+        set a few things up
         """
         self.root_url = FakeRequest("/")
+        self.contact_url = FakeRequest("/contact/thanks/")
     
     def test_root_path(self):
         """
-        The root ( just a slash '/') should ONLY match itself
+        The root url really should only match itself
         """
-        self.assertFalse(insidenav(self.root_url, "/asdf/"))
-        self.assertFalse(insidenav(self.root_url, "/asdf/asdf/asdf/"))
         self.assertTrue(insidenav(self.root_url, "/"))
+        self.assertFalse(insidenav(self.root_url, "/contact"))
         
-    
+    def test_unicode_only(self):
+        """
+        Django passes around unicodes instead of strings
+        """
+        with self.assertRaises(AttributeError):
+            insidenav("/contact/thanks/", "/contact/")
+        
+        self.assertTrue(u"/contact/thanks/", "/contact/")
+        
+    def test_inside_nav(self):
+        """
+        Test functionality
+        """
+        self.assertTrue(insidenav(self.contact_url, "/contact"))
+        self.assertTrue(insidenav(self.contact_url, "/contact/"))
+        self.assertTrue(insidenav(self.contact_url, "contact"))
+        self.assertFalse(insidenav(self.contact_url, "asdf"))
+        self.assertFalse(insidenav(self.contact_url, "/asdf/"))
+        
 
 class ActiveTogglerTestCase(TestCase):
     """
