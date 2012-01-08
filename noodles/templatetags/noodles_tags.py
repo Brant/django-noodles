@@ -28,16 +28,15 @@ def insidenav(request, pattern):
     if not path.__class__.__name__ == "unicode":
         path = request.path
     
-    
     if pattern == '/':
         if pattern == path:
             return True
     else:
-        try:
-            if re.search(pattern, path):
-                return True
-        except AttributeError:
-            pass
-        return False
+#        try:
+        if re.search(pattern, path):
+            return True
+#        except AttributeError:
+#            pass
+#        return False
     
     return False
