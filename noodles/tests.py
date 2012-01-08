@@ -4,10 +4,34 @@ Noodles Tests
 from datetime import datetime
 from django.test import TestCase
 
-
+from noodles.templatetags.noodles_tags import insidenav
 from noodles.testing.models import *
 
+class FakeRequest(object):
+    """
+    just provide a few things for testing purposes
+    to mimic a request object
+    """
+    def __init__(self, path):
+        self.path = path 
 
+class InsideNavTestCase(TestCase):
+    urls = "noodles.testing.urls"
+    
+    def setUp(self):
+        """
+        """
+        self.root_url = FakeRequest("/")
+    
+    def test_root_path(self):
+        """
+        The root ( just a slash '/') should ONLY match itself
+        """
+        self.assertFalse(insidenav(self.root_url, "/asdf/"))
+        self.assertFalse(insidenav(self.root_url, "/asdf/asdf/asdf/"))
+        self.assertTrue(insidenav(self.root_url, "/"))
+        
+    
 
 class ActiveTogglerTestCase(TestCase):
     """
