@@ -1,3 +1,7 @@
+"""
+Admin configurations
+"""
+
 from django.contrib import admin
 from noodles.models import SiteMeta, ContactSubmission
 

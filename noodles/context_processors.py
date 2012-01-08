@@ -7,6 +7,7 @@ from noodles.models import SiteMeta
 
 def static_paths(request):
     """
+    Return URLS to our static areas
     """
     return {
         "IMG": "%s%s/" % (settings.STATIC_URL, "img"),
@@ -20,17 +21,14 @@ def site(request):
     """
     Return site.name and site.domain as a URL
     """
-    
     return {
         "SITE_NAME": THIS_SITE.name,
         "SITE_URL": "http://%s/" % THIS_SITE.domain
     }
-    
-    
 
-meta = SiteMeta.objects.all()
+META = SiteMeta.objects.all()
 SITE_META = {}
-for data in meta:
+for data in META:
     SITE_META.update({data.key: data.value})
     
 def site_meta(request):
@@ -39,7 +37,5 @@ def site_meta(request):
     
     available like this:
         {{ SITE_META.key }}
-    """
-    
-        
+    """    
     return {'SITE_META': SITE_META}

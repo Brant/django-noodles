@@ -8,6 +8,9 @@ from noodles.models import ContactSubmission
 
 
 class EmailInput(Input):
+    """
+    Custom field to create an <input type='email'> HTML5 element
+    """
     input_type = 'email'
 
 class ContactForm(forms.ModelForm):

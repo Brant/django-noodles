@@ -7,7 +7,7 @@ from django.template.defaultfilters import slugify
 from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import EmailMessage
 from django.conf import settings
 
 from noodles.util import get_email_send_to_list
@@ -80,6 +80,9 @@ class TitleDateSlug(models.Model):
         abstract = True
         
     def _find_slug_matches(self, slug):
+        """
+        Figure out if the slug is taken
+        """
         if self.id:
             return self.__class__.objects.filter(~Q(pk=self.id), slug=slug)
         
