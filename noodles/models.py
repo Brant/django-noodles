@@ -12,6 +12,81 @@ from django.conf import settings
 
 from noodles.util import get_email_send_to_list
 
+
+def find_slug_matches(obj, slug):
+    """
+    Return a queryset of matches of the type of 'obj' with a slug of 'slug'
+    """
+    if obj.id:
+        return obj.__class__.objects.filter(~Q(pk=obj.id), slug=slug)
+
+    return obj.__class__.objects.filter(slug=slug)
+
+
+def generate_slug(obj, slug_target, persistant_slug=False):
+    """
+    Create a slug for obj based on slug_target
+
+    Does not allow duplicates - appends a number
+    """
+    slug = obj.slug
+
+    to_slug = getattr(obj, slug_target)
+
+    if not slug or not persistant_slug:
+        slug = slugify(to_slug)
+
+        orig_slug = slug
+
+        num = 1
+        while (find_slug_matches(obj, slug)):
+            slug = "%s-%s" % (orig_slug, num)
+            num += 1
+
+    return slug
+
+
+class LittleSlugger(models.Model):
+    """
+    Model for slugifying some attribute
+    """
+
+    slug = models.CharField(max_length=300, editable=False, blank=True)
+    
+    def __unicode__(self):
+        return getattr(self, self.get_slug_target())
+    
+    class Meta:
+        """
+        Remember to inherit if needed
+        """
+        abstract = True
+
+    def get_slug_target(self):
+        """
+        return the slug target and persistant as a tuple
+
+        e.g. if the subclass has a 'name' property, this should return 'name'
+
+        persistant refers to whether the slug should persist if the field value changes
+
+        so, if persist is True and a subclass' slug target value changes, the slug will not update
+            - Useful for public permalinks
+        """
+        raise NotImplementedError("classes inheriting from LittleSlugger must implement a 'get_slug_target' method")
+
+    def save(self, *args, **kwargs):
+        """
+        Custom save
+
+        - Slugifies title
+        """
+
+        slug_target, persist = self.get_slug_target()
+
+        self.slug = generate_slug(self, slug_target, persist)
+        super(LittleSlugger, self).save(*args, **kwargs)
+
 class ContactSubmission(models.Model):
     """
     Name/email/message contact form submission

@@ -13,6 +13,9 @@ NOODLES_EMAIL_LIST = []
 
 Abstract Models
 ---------------
+### LittleSlugger
+### ActiveToggler
+### TitleDateSlug
 
 Jaxy
 ----
