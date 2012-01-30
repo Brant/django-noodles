@@ -82,7 +82,11 @@ class LittleSlugger(models.Model):
         - Slugifies title
         """
 
-        slug_target, persist = self.get_slug_target()
+        try:
+            slug_target, persist = self.get_slug_target()
+        except ValueError:
+            slug_target = self.get_slug_target()
+            persist = True
 
         self.slug = generate_slug(self, slug_target, persist)
         super(LittleSlugger, self).save(*args, **kwargs)
@@ -113,6 +117,7 @@ def send_notification_email(sender, **kwargs):
             headers = {"Reply-To": submission.email}
         ).send(fail_silently=True)
     
+
 class TitleDateSlug(models.Model):
     """
     Abstract model that provides a few things
