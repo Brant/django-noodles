@@ -7,7 +7,7 @@ setup(
     url = 'http://github.com/Brant/django-noodles',
     license = 'GPL',
     description = "Half-baked noodles of ideas for little bits of functionality for Django",
-    long_description = read('README.md'),
+    long_description = open('README.md').read(),
 
     author = 'Brant Steen',
     author_email = 'brant.steen@gmail.com',
