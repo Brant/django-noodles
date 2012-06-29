@@ -5,8 +5,31 @@ from datetime import datetime
 from django.test import TestCase
 
 from noodles.templatetags.noodles_tags import insidenav
-from noodles.testing.models import *
+#from noodles.testing.models import *
+from noodles.models import TitleDateSlug, ActiveToggler
 
+
+class TitleDateSlugConcrete(TitleDateSlug):
+    """
+    Concreate class to test against
+    """
+    class Meta:
+        """
+        Django metadata
+        """
+        app_label = "noodles"
+
+class ActiveTogglerConcrete(ActiveToggler):
+    """
+    Concrete class to test against
+    """
+    class Meta:
+        """
+        Django metadata
+        """
+        app_label = "noodles"
+        
+        
 class FakeRequest(object):
     """
     just provide a few things for testing purposes
