@@ -92,11 +92,14 @@ class LittleSlugger(models.Model):
         super(LittleSlugger, self).save(*args, **kwargs)
 
 
-class NameSlug(LittleSlugger):
+class NameSlugActive(LittleSlugger):
     """
     gives a 'name' attribute and slug for that name
+    
+    also gives an 'active' field
     """
     name = models.CharField(max_length=300)
+    active = models.BooleanField(default=True)
     
     def get_slug_target(self):
         """ 
@@ -120,6 +123,7 @@ class ContactSubmission(models.Model):
     message = models.TextField()
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     
+
 @receiver(post_save, sender=ContactSubmission, dispatch_uid="Noodel_Contact_Submission")
 def send_notification_email(sender, **kwargs):
     """
