@@ -91,6 +91,26 @@ class LittleSlugger(models.Model):
         self.slug = generate_slug(self, slug_target, persist)
         super(LittleSlugger, self).save(*args, **kwargs)
 
+
+class NameSlug(LittleSlugger):
+    """
+    gives a 'name' attribute and slug for that name
+    """
+    name = models.CharField(max_length=300)
+    
+    def get_slug_target(self):
+        """ 
+        Implementing required method
+        """
+        return 'name'
+    
+    class Meta:
+        """
+        Django metadata
+        """
+        abstract = True
+    
+
 class ContactSubmission(models.Model):
     """
     Name/email/message contact form submission

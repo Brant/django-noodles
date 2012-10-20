@@ -25,6 +25,7 @@ def site(request):
         "SITE_NAME": THIS_SITE.name,
         "SITE_URL": "http://%s/" % THIS_SITE.domain
     }
+    
 
 META = SiteMeta.objects.all()
 SITE_META = {}
