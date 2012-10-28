@@ -113,14 +113,14 @@ class AssetsFromImageHandler(object):
             # uploaded image is too wide
             height = int(self._image.size[0] * target_ratio)
             width = self._image.size[0]
-            buffered_image = Image.new("RGBA", (width, height), (255, 255, 255, 1))
+            buffered_image = Image.new("RGBA", (width, height), (255, 255, 255, 255))
             offset = (0, ((height - self._image.size[1]) / 2))
             buffered_image.paste(self._image, offset)
         else:
             # uploaded image is too tall
             height = self._image.size[1]
             width = int(self._image.size[1] / target_ratio)
-            buffered_image = Image.new("RGBA", (width, height), (255, 255, 255, 1))
+            buffered_image = Image.new("RGBA", (width, height), (255, 255, 255, 255))
             offset = ((width - self._image.size[0]) / 2, 0)
             buffered_image.paste(self._image, offset)
         
