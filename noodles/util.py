@@ -5,8 +5,6 @@ import Image, os
 
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.conf import settings
-from django.core.mail import EmailMessage
-
 
 def get_email_send_to_list():
     """
@@ -20,17 +18,7 @@ def get_email_send_to_list():
         email_list = [email for name, email in settings.ADMINS]
     
     return email_list
-  
-
-#def send_notification(submission):
-#    EmailMessage(
-#            "%s Contact from %s" % (settings.EMAIL_SUBJECT_PREFIX, submission.name), 
-#            "Name: %s\nEmail: %s\n\nMessage:\n%s" % (submission.name, submission.email, submission.message),  
-#            settings.DEFAULT_FROM_EMAIL,
-#            get_email_send_to_list(),
-#            headers = {"Reply-To": submission.email}
-#        ).send(fail_silently=True)
-  
+    
 
 def make_paginator(request, queryset, per_page=5):
     """

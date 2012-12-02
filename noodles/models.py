@@ -7,8 +7,10 @@ from django.template.defaultfilters import slugify
 from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.mail import EmailMessage
+from django.conf import settings
 
-from noodles.util import get_email_send_to_list#, send_notification
+from noodles.util import get_email_send_to_list
 
 
 def find_slug_matches(obj, slug):
@@ -122,16 +124,23 @@ class ContactSubmission(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     
 
-#@receiver(post_save, sender=ContactSubmission, dispatch_uid="Noodel_Contact_Submission")
-#def send_notification_email(sender, **kwargs):
-#    """
-#    Pop off an email notification when a contact submission goes through
-#    """
-#    if kwargs["created"]:
-#        
-#        submission = kwargs["instance"]
-#        
-#        send_notification(submission)
+@receiver(post_save, sender=ContactSubmission, dispatch_uid="Noodel_Contact_Submission")
+def send_notification_email(sender, **kwargs):
+    """
+    Pop off an email notification when a contact submission goes through
+    """
+    if kwargs["created"]:
+        
+        submission = kwargs["instance"]
+        
+        EmailMessage(
+            "%s Contact from %s" % (settings.EMAIL_SUBJECT_PREFIX, submission.name), 
+            "Name: %s\nEmail: %s\n\nMessage:\n%s" % (submission.name, submission.email, submission.message),  
+            settings.DEFAULT_FROM_EMAIL,
+            get_email_send_to_list(),
+            headers = {"Reply-To": submission.email}
+        ).send(fail_silently=True)
+    
 
 class TitleDateSlug(models.Model):
     """
