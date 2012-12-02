@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from noodles.util import get_email_send_to_list, send_notification
+from noodles.util import get_email_send_to_list#, send_notification
 
 
 def find_slug_matches(obj, slug):
@@ -122,16 +122,16 @@ class ContactSubmission(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     
 
-@receiver(post_save, sender=ContactSubmission, dispatch_uid="Noodel_Contact_Submission")
-def send_notification_email(sender, **kwargs):
-    """
-    Pop off an email notification when a contact submission goes through
-    """
-    if kwargs["created"]:
-        
-        submission = kwargs["instance"]
-        
-        send_notification(submission)
+#@receiver(post_save, sender=ContactSubmission, dispatch_uid="Noodel_Contact_Submission")
+#def send_notification_email(sender, **kwargs):
+#    """
+#    Pop off an email notification when a contact submission goes through
+#    """
+#    if kwargs["created"]:
+#        
+#        submission = kwargs["instance"]
+#        
+#        send_notification(submission)
 
 class TitleDateSlug(models.Model):
     """
