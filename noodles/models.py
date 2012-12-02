@@ -7,10 +7,8 @@ from django.template.defaultfilters import slugify
 from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.core.mail import EmailMessage
-from django.conf import settings
 
-from noodles.util import get_email_send_to_list
+from noodles.util import get_email_send_to_list, send_notification
 
 
 def find_slug_matches(obj, slug):
@@ -133,14 +131,7 @@ def send_notification_email(sender, **kwargs):
         
         submission = kwargs["instance"]
         
-        EmailMessage(
-            "%s Contact from %s" % (settings.EMAIL_SUBJECT_PREFIX, submission.name), 
-            "Name: %s\nEmail: %s\n\nMessage:\n%s" % (submission.name, submission.email, submission.message),  
-            settings.DEFAULT_FROM_EMAIL,
-            get_email_send_to_list(),
-            headers = {"Reply-To": submission.email}
-        ).send(fail_silently=True)
-    
+        send_notification(submission)
 
 class TitleDateSlug(models.Model):
     """
