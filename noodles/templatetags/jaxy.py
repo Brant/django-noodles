@@ -11,7 +11,7 @@ class JaxyExtend(ExtendsNode):
         
         self.condition = condition
         self.parent_alt = parent_alt
-            
+        
         super(JaxyExtend, self).__init__(nodelist, parent_name, parent_name_expr, template_dirs=None)       
             
         self.must_be_first = False

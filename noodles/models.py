@@ -92,14 +92,11 @@ class LittleSlugger(models.Model):
         super(LittleSlugger, self).save(*args, **kwargs)
 
 
-class NameSlugActive(LittleSlugger):
+class NameSlug(LittleSlugger):
     """
     gives a 'name' attribute and slug for that name
-    
-    also gives an 'active' field
     """
     name = models.CharField(max_length=300)
-    active = models.BooleanField(default=True)
     
     def get_slug_target(self):
         """ 
@@ -112,7 +109,23 @@ class NameSlugActive(LittleSlugger):
         Django metadata
         """
         abstract = True
+        
+
+class NameSlugActive(NameSlug):
+    """
+    Inherits a name and a slug
     
+    also gives an 'active' field
+    """
+    
+    active = models.BooleanField(default=True)
+    
+    class Meta:
+        """
+        Django metadata
+        """
+        abstract = True
+        
 
 class ContactSubmission(models.Model):
     """
