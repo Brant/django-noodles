@@ -25,7 +25,7 @@ def insidenav(request, pattern):
     
     path = request
     
-    if not path.__class__.__name__ == "unicode":
+    if not path.__class__.__name__ == "unicode" and not isinstance(request, str):
         path = request.path
     
     if pattern == '/':
