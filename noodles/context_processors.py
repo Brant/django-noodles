@@ -23,7 +23,7 @@ def site(request):
     """
     return {
         "SITE_NAME": THIS_SITE.name,
-        "SITE_URL": "http://%s/" % THIS_SITE.domain
+        "SITE_URL": "http://%s" % THIS_SITE.domain
     }
     
 
