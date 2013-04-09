@@ -59,9 +59,7 @@ class InsideNavTestCase(TestCase):
         """
         Django passes around unicodes instead of strings
         """
-        with self.assertRaises(AttributeError):
-            insidenav("/contact/thanks/", "/contact/")
-        
+        self.assertTrue(insidenav("/contact/thanks/", "/contact/"))
         self.assertTrue(u"/contact/thanks/", "/contact/")
         
     def test_inside_nav(self):
