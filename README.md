@@ -16,9 +16,8 @@ Abstract Models
 ### LittleSlugger
 ### ActiveToggler
 ### TitleDateSlug
-
-Jaxy
-----
+### NameSlug
+### NameSlugActive
 
 Assets From Image
 -----------------
