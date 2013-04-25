@@ -25,13 +25,13 @@ Your models can just inherit from these models to save yourself some typing.
 LittleSlugger allows you to designate a field on your model to be "slugified". It provides some additional calculations to prevent conflicting slugs, so you can query reliably on the slug field.
 
 In order to implement, you need to create a method for your model named "get_slug_target". It should return the name of the field you want to slugify, as a string.
-
+```python
 	class MySluggedModel(LittleSlugger):
 	    title = models.CharField(max_length=50)
 	    
 	    def get_slug_target(self):
 	        return "title"	    
-
+```
 ### ActiveToggler
 ### TitleDateSlug
 ### NameSlug
