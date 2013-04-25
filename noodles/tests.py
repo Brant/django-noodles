@@ -41,7 +41,7 @@ class FakeRequest(object):
 
 
 class InsideNavTestCase(TestCase):
-    urls = "noodles.testing.urls"
+    urls = "noodles.test_urls"
     
     def setUp(self):
         """

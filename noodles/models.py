@@ -2,6 +2,7 @@
 Some abstract models
 """
 from datetime import timedelta, datetime
+
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.db.models import Q

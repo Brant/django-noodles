@@ -18,28 +18,26 @@ def static_paths(request):
     }
 
 
-THIS_SITE = Site.objects.get_current()
 def site(request):
     """
     Return site.name and site.domain as a URL
     """
+    THIS_SITE = Site.objects.get_current()
     return {
         "SITE_NAME": THIS_SITE.name,
         "SITE_URL": "http://%s" % THIS_SITE.domain
     }
-    
 
-META = SiteMeta.objects.all()
+
 SITE_META = {}
-for data in META:
-    SITE_META.update({data.key: data.value})
-    
-
 def site_meta(request):
     """
     Make metadata available as a context processor
     
     available like this:
         {{ SITE_META.key }}
-    """    
+    """
+    META = SiteMeta.objects.all()
+    for data in META:
+        SITE_META.update({data.key: data.value})    
     return {'SITE_META': SITE_META}

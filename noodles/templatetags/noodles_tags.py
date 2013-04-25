@@ -2,10 +2,14 @@
 Template tags and filters for noodles
 """
 import re
+
 from django import template
+
 from noodles.forms import ContactForm
 
+
 register = template.Library()
+
 
 @register.inclusion_tag('noodles/contact_form.html')
 def contact_form():
@@ -32,11 +36,7 @@ def insidenav(request, pattern):
         if pattern == path:
             return True
     else:
-#        try:
         if re.search(pattern, path):
             return True
-#        except AttributeError:
-#            pass
-#        return False
     
     return False
