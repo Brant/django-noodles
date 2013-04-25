@@ -2,10 +2,10 @@
 Noodles Tests
 """
 from datetime import datetime
+
 from django.test import TestCase
 
 from noodles.templatetags.noodles_tags import insidenav
-#from noodles.testing.models import *
 from noodles.models import TitleDateSlug, ActiveToggler
 
 
@@ -18,6 +18,7 @@ class TitleDateSlugConcrete(TitleDateSlug):
         Django metadata
         """
         app_label = "noodles"
+
 
 class ActiveTogglerConcrete(ActiveToggler):
     """
@@ -37,6 +38,7 @@ class FakeRequest(object):
     """
     def __init__(self, path):
         self.path = unicode(path) 
+
 
 class InsideNavTestCase(TestCase):
     urls = "noodles.testing.urls"
@@ -145,7 +147,6 @@ class TitleDateSlugTestCase(TestCase):
         self.mod_3.save()
         self.assertEquals(self.mod_3.slug, "some-people-2")
         
-    
     def test_date_during_save(self):
         """
         Date should be auto generated

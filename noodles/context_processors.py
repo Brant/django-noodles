@@ -3,7 +3,9 @@ Available context processors for django-noodles
 """
 from django.conf import settings
 from django.contrib.sites.models import Site
+
 from noodles.models import SiteMeta
+
 
 def static_paths(request):
     """
@@ -14,7 +16,7 @@ def static_paths(request):
         "JS": "%s%s/" % (settings.STATIC_URL, "js"),
         "CSS": "%s%s/" % (settings.STATIC_URL, "css")
     }
-    
+
 
 THIS_SITE = Site.objects.get_current()
 def site(request):
@@ -32,6 +34,7 @@ SITE_META = {}
 for data in META:
     SITE_META.update({data.key: data.value})
     
+
 def site_meta(request):
     """
     Make metadata available as a context processor

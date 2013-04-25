@@ -6,6 +6,7 @@ import Image, os
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.conf import settings
 
+
 def get_email_send_to_list():
     """
     Returns a list of addresses to send correspondance to
@@ -84,8 +85,7 @@ class AssetsFromImageHandler(object):
         if save_path:
             self._save_image(buffered_image, save_path)
             
-        return buffered_image
-            
+        return buffered_image            
     
     def create_any_size(self, width, height, save_path=None):
         """

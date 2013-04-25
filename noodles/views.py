@@ -1,13 +1,13 @@
 """
 NOODLE VIEWS!!!
 """
-
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from noodles.forms import ContactForm
+
 
 def contact(request):
     """
@@ -27,6 +27,7 @@ def contact(request):
     response_data = { "form": form }
     
     return render_to_response("noodles/contact.html", response_data, context_instance=RequestContext(request))
+
 
 def contact_thanks(request):
     """

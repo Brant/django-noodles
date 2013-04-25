@@ -224,6 +224,7 @@ class TitleDateSlug(models.Model):
          
         return slug
 
+
 class ActiveToggler(models.Model):
     """
     An 'active/deactive' toggle model
@@ -248,7 +249,8 @@ class ActiveToggler(models.Model):
                 obj.save()
                 
         super(ActiveToggler, self).save(*args, **kwargs)
-        
+
+
 class SiteMeta(models.Model):
     """
     A key/value store for simple site metadata
