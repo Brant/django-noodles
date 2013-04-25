@@ -20,8 +20,6 @@ Each abstract model is essentially named exactly to match the fields it will giv
 
 Your models can just inherit from these models to save yourself some typing.
 
-
-
 ### LittleSlugger
 LittleSlugger allows you to designate a field on your model to be "slugified". It provides some additional calculations to prevent conflicting slugs, so you can query reliably on the slug field.
 
@@ -33,6 +31,24 @@ class MySluggedModel(LittleSlugger):
     def get_slug_target(self):
         return "title"	    
 ```
+The default behavior is to look for another object of the same model type with a matching slug. If it finds one, it will append a number (in sequence) to the end of the slug.
+
+For example, if you had an entry with a title of "A good day", it would have a slug of "a-good-day". If you then made _another_ entry titled "A good day", it would end up with a slug of "a-good-day-1". If a third entry with the same title was created, it would become "a-good-day-2". This allows reliably querying on slugs, as if they would always be unique.
+
+Another default behavior of LittleSlugger is to keep the slug, once it has been established, even if the sluggified field should change. This allows, for example, title changes on blog posts without changing the URL of that post.
+
+For example, if you titled a post "A good days" and published it, you might have a URL of "http://myblog.com/a-good-days/". Realizing it should be titled "A good day", you would change the title. However, the slug would stay the same, keeping any pointers to the URL the same as well.
+
+To disable this behavior, you simply need to make a small addition to the "get_slug_target" method.
+```python
+class MySluggedModel(LittleSlugger):
+    title = models.CharField(max_length=50)
+    
+    def get_slug_target(self):
+        return ("title", False)	    
+```
+The second variable returned in the tuple designates whether or not the slug should "persist" through field changes.
+
 ### ActiveToggler
 ### TitleDateSlug
 ### NameSlug
