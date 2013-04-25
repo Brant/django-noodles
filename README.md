@@ -25,13 +25,15 @@ LittleSlugger allows you to designate a field on your model to be "slugified". I
 
 In order to implement, you need to create a method for your model named "get_slug_target". It should return the name of the field you want to slugify, as a string.
 ```python
+from noodles.models import LittleSlugger
+
 class MySluggedModel(LittleSlugger):
     title = models.CharField(max_length=50)
     
     def get_slug_target(self):
         return "title"	    
 ```
-The default behavior is to look for another object of the same model type with a matching slug. If it finds one, it will append a number (in sequence) to the end of the slug.
+Little slugger will look for another object of the same model type with a matching slug. If it finds one, it will append a number (in sequence) to the end of the slug.
 
 For example, if you had an entry with a title of "A good day", it would have a slug of "a-good-day". If you then made _another_ entry titled "A good day", it would end up with a slug of "a-good-day-1". If a third entry with the same title was created, it would become "a-good-day-2". This allows reliably querying on slugs, as if they would always be unique.
 
@@ -41,6 +43,8 @@ For example, if you titled a post "A good days" and published it, you might have
 
 To disable this behavior, you simply need to make a small addition to the "get_slug_target" method.
 ```python
+from noodles.models import LittleSlugger
+
 class MySluggedModel(LittleSlugger):
     title = models.CharField(max_length=50)
     
