@@ -20,8 +20,8 @@ if not settings.configured:
         SITE_ID = 1,
         STATIC_URL = '/static/',
         ROOT_URLCONF = 'noodles.test_urls',
-        TEST_RUNNER = "django_nose.runner.NoseTestSuiteRunner",
-        NOSE_ARGS = ["--with-xcoverage", "--cover-inclusive", "--with-xunit", "--exe", "--verbosity=3",],
+#         TEST_RUNNER = "django_nose.runner.NoseTestSuiteRunner",
+        NOSE_ARGS = ["--with-xcoverage", "--cover-inclusive", "--with-xunit", "--exe", "--verbosity=3", "--cover-package=noodles"],
         NOSE_PLUGINS = [
             'nosexcover.XCoverage',
             "nose_exclude.NoseExclude"
@@ -30,10 +30,10 @@ if not settings.configured:
 
 
 # from django.test.simple import DjangoTestSuiteRunner
-from django_nose.runner import BasicNoseRunner
+from django_nose.runner import NoseTestSuiteRunner
 
 def runtests():
-    runner = BasicNoseRunner()
+    runner = NoseTestSuiteRunner()
     failures = runner.run_tests(['tests'])
     sys.exit(failures)
 
