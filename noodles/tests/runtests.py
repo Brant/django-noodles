@@ -21,7 +21,7 @@ if not settings.configured:
         STATIC_URL = '/static/',
         ROOT_URLCONF = 'noodles.test_urls',
         TEST_RUNNER = "django_nose.runner.NoseTestSuiteRunner",
-        NOSE_ARGS = ["--with-xcoverage", "--cover-inclusive", "--with-xunit", "--exe", "--verbosity=3", "--cover-package=noodles"],
+        NOSE_ARGS = ["--with-xcoverage", "--cover-inclusive", "--with-xunit", "--exe", "--verbosity=3",],
         NOSE_PLUGINS = [
             'nosexcover.XCoverage',
             "nose_exclude.NoseExclude"
