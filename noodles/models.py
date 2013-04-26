@@ -51,7 +51,6 @@ class LittleSlugger(models.Model):
     """
     Model for slugifying some attribute
     """
-
     slug = models.CharField(max_length=300, editable=False, blank=True)
     
     def __unicode__(self):
@@ -82,7 +81,6 @@ class LittleSlugger(models.Model):
 
         - Slugifies title
         """
-
         try:
             slug_target, persist = self.get_slug_target()
         except ValueError:

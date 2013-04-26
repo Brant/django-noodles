@@ -33,7 +33,9 @@ class MySluggedModel(LittleSlugger):
     def get_slug_target(self):
         return "title"	    
 ```
-Little slugger will look for another object of the same model type with a matching slug. If it finds one, it will append a number (in sequence) to the end of the slug.
+Not adding the "get_slug_target" method to your model will raise NotImplementedError.
+
+Little Slugger will look for another object of the same model type with a matching slug. If it finds one, it will append a number (in sequence) to the end of the slug.
 
 For example, if you had an entry with a title of "A good day", it would have a slug of "a-good-day". If you then made _another_ entry titled "A good day", it would end up with a slug of "a-good-day-1". If a third entry with the same title was created, it would become "a-good-day-2". This allows reliably querying on slugs, as if they would always be unique.
 
@@ -54,6 +56,18 @@ class MySluggedModel(LittleSlugger):
 The second variable returned in the tuple designates whether or not the slug should "persist" through field changes.
 
 ### ActiveToggler
+Active Toggler lets you toggle 1 entry of the model to be considered "active". Only 1 entry can be active at a time.
+
+Active Toggler adds an "active" attribute to your model. When an object of the model is saved (by calling .save()) and set to active=True, it will run through all other entries for the model and set them all to active=False.
+
+```python
+from noodles.models import ActiveToggler
+
+class MyActiveToggler(ActiveToggler):
+    """ You can only have 1 favorite at a time """
+    favorite_ice_cream = models.CharField(max_length=50)
+```
+
 ### TitleDateSlug
 ### NameSlug
 ### NameSlugActive
