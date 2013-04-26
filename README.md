@@ -56,16 +56,21 @@ class MySluggedModel(LittleSlugger):
 The second variable returned in the tuple designates whether or not the slug should "persist" through field changes.
 
 ### ActiveToggler
-Active Toggler lets you toggle 1 entry of the model to be considered "active". Only 1 entry can be active at a time.
+Active Toggler lets you toggle 1 entry of the model to be considered "active". Only 1 entry can be active at a time. 
 
 Active Toggler adds an "active" attribute to your model. When an object of the model is saved (by calling .save()) and set to active=True, it will run through all other entries for the model and set them all to active=False.
 
 ```python
 from noodles.models import ActiveToggler
 
-class MyActiveToggler(ActiveToggler):
+class FavoriteIcecream(ActiveToggler):
     """ You can only have 1 favorite at a time """
-    favorite_ice_cream = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
+```
+
+You could then use the model to query as if "active" was a unique field.
+```python
+current_favorite_icecream = FavoriteIcecream.objects.get(active=True)
 ```
 
 ### TitleDateSlug
