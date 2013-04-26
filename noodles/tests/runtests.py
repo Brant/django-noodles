@@ -34,7 +34,7 @@ from django_nose.runner import NoseTestSuiteRunner
 
 def runtests():
     runner = NoseTestSuiteRunner()
-    failures = runner.run_tests(['tests'])
+    failures = runner.run_tests(['noodles'])
     sys.exit(failures)
 
 if __name__ == '__main__':
