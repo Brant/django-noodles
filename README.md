@@ -79,7 +79,7 @@ NameSlug is a subclass of LittleSlugger, which has a "name" attribute. That name
 ### NameSlugActive
 NameSlugActive is a subclass of NameSlug (which is a subclass of LittleSlugger). In addition to a name and a slug of that name, there is an "active" attribute (BooleanField that defaults to True). 
 
-*Note:* The 'active' attribute is _not_ a toggler (like ActiveToggler's active field).
+**Note:** The 'active' attribute is _not_ a toggler (like ActiveToggler's active field).
  
 ### TitleDateSlug
 TitleDateSlug is a subclass of LittleSlugger. It's attributes are 'title', 'date', and 'slug'. Slug is derived from the title. 
