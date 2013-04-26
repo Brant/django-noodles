@@ -84,8 +84,7 @@ NameSlugActive is a subclass of NameSlug (which is a subclass of LittleSlugger).
 ### TitleDateSlug
 TitleDateSlug is a subclass of LittleSlugger. It's attributes are 'title', 'date', and 'slug'. Slug is derived from the title. 
 
-The date attribute could be used as something like a publish date. It does not auto-populate.
-
+The date attribute could be used as something like a publish date. If left blank at save, it will auto populate to 5 days in the future.
 
 Website Metadata
 ----------------
