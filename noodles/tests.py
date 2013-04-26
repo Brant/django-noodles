@@ -4,9 +4,44 @@ Noodles Tests
 from datetime import datetime
 
 from django.test import TestCase
+from django.conf import settings
 
 from noodles.templatetags.noodles_tags import insidenav
-from noodles.models import TitleDateSlug, ActiveToggler
+from noodles.models import TitleDateSlug, ActiveToggler, SiteMeta
+from noodles import context_processors
+
+
+class ContextProcessorTestCase(TestCase):
+    """
+    Tests for context processors
+    """
+    def test_static_paths(self):
+        """
+        Test static paths context processor
+        """
+        paths = context_processors.static_paths("fake_request")
+        self.assertIn(settings.STATIC_URL, paths["IMG"])
+        self.assertIn(settings.STATIC_URL, paths["JS"])
+        self.assertIn(settings.STATIC_URL, paths["CSS"])
+    
+    def test_site_meta(self):
+        """
+        Test SITE_META context processor
+        """
+        metadata = context_processors.site_meta("fake_request")
+        self.assertDictEqual(metadata["SITE_META"], {})
+        
+        SiteMeta(key="KEY", value="VAL").save()
+        metadata = context_processors.site_meta("fake_request")
+        self.assertIn("KEY", metadata["SITE_META"])
+        self.assertEquals(metadata["SITE_META"]["KEY"], "VAL")
+        
+    def test_site(self):
+        """
+        Test SITE_NAME and SITE_URL
+        """
+        self.assertEquals(context_processors.site("fake_request")["SITE_NAME"], "example.com")
+        self.assertEquals(context_processors.site("fake_request")["SITE_URL"], "http://example.com")
 
 
 class TitleDateSlugConcrete(TitleDateSlug):
