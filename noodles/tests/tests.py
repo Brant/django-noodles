@@ -9,7 +9,7 @@ from django.conf import settings
 from noodles.templatetags.noodles_tags import insidenav
 from noodles.models import TitleDateSlug, ActiveToggler, SiteMeta
 from noodles import context_processors
-
+from noodles.tests.models import ActiveTogglerConcrete, TitleDateSlugConcrete
 
 class ContextProcessorTestCase(TestCase):
     """
@@ -43,29 +43,6 @@ class ContextProcessorTestCase(TestCase):
         self.assertEquals(context_processors.site("fake_request")["SITE_NAME"], "example.com")
         self.assertEquals(context_processors.site("fake_request")["SITE_URL"], "http://example.com")
 
-
-class TitleDateSlugConcrete(TitleDateSlug):
-    """
-    Concreate class to test against
-    """
-    class Meta:
-        """
-        Django metadata
-        """
-        app_label = "noodles"
-
-
-class ActiveTogglerConcrete(ActiveToggler):
-    """
-    Concrete class to test against
-    """
-    class Meta:
-        """
-        Django metadata
-        """
-        app_label = "noodles"
-        
-        
 class FakeRequest(object):
     """
     just provide a few things for testing purposes
