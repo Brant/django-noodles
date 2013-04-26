@@ -154,7 +154,7 @@ def send_notification_email(sender, **kwargs):
         ).send(fail_silently=True)
     
 
-class TitleDateSlug(models.Model):
+class TitleDateSlug(LittleSlugger):
     """
     Abstract model that provides a few things
     
@@ -162,8 +162,13 @@ class TitleDateSlug(models.Model):
     Date can be used for whatever
     """
     title = models.CharField(max_length=900)
-    slug = models.CharField(max_length=900, blank=True)
     date = models.DateTimeField(blank=True)
+    
+    def get_slug_target(self):
+        """ 
+        Implementing required method
+        """
+        return 'title'
     
     def save(self, *args, **kwargs):
         """
@@ -171,57 +176,16 @@ class TitleDateSlug(models.Model):
         
         - Slugifies title
         """
-        
-        self.slug = self._generate_slug()
-        
         if not self.date:
             self.date = datetime.now() + timedelta(days=5)
             
         super(TitleDateSlug, self).save(*args, **kwargs)
     
-    def __unicode__(self):
-        return self.title
-    
     class Meta:
         """
         Django metadata
-        
-        Don't forget to inherit this if you need more Meta
-        https://docs.djangoproject.com/en/1.3/topics/db/models/#meta-inheritance
-        
-        class TitleDateSlugConcrete(TitleDateSlug):
-            class Meta(TitleDateSlug.Meta):
-                ordering = ["-title"]
         """
         abstract = True
-        
-    def _find_slug_matches(self, slug):
-        """
-        Figure out if the slug is taken
-        """
-        if self.id:
-            return self.__class__.objects.filter(~Q(pk=self.id), slug=slug)
-        
-        return self.__class__.objects.filter(slug=slug)
-    
-    def _generate_slug(self):
-        """
-        Create a slug based on the title
-        Does not allow duplicates - appends a number
-        """
-        slug = self.slug
-        
-        if not slug:
-            slug = slugify(self.title)    
-
-            orig_slug = slug
-            
-            num = 1
-            while (self._find_slug_matches(slug)):
-                slug = "%s-%s" % (orig_slug, num)
-                num += 1
-         
-        return slug
 
 
 class ActiveToggler(models.Model):
