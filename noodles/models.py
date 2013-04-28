@@ -116,7 +116,6 @@ class NameSlugActive(NameSlug):
     
     also gives an 'active' field
     """
-    
     active = models.BooleanField(default=True)
     
     class Meta:
@@ -136,15 +135,13 @@ class ContactSubmission(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     
 
-@receiver(post_save, sender=ContactSubmission, dispatch_uid="Noodel_Contact_Submission")
+@receiver(post_save, sender=ContactSubmission, dispatch_uid="Noodle_Contact_Submission")
 def send_notification_email(sender, **kwargs):
     """
     Pop off an email notification when a contact submission goes through
     """
     if kwargs["created"]:
-        
         submission = kwargs["instance"]
-        
         EmailMessage(
             "%s Contact from %s" % (settings.EMAIL_SUBJECT_PREFIX, submission.name), 
             "Name: %s\nEmail: %s\n\nMessage:\n%s" % (submission.name, submission.email, submission.message),  

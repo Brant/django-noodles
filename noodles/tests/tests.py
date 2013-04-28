@@ -6,11 +6,13 @@ from datetime import datetime
 from django.test import TestCase
 from django.conf import settings
 from django.test.utils import override_settings
+from django.core import mail
+from django.core.mail import EmailMessage
 
 from noodles.templatetags.noodles_tags import insidenav
-from noodles.models import TitleDateSlug, ActiveToggler, SiteMeta
+from noodles.models import TitleDateSlug, ActiveToggler, SiteMeta, ContactSubmission
 from noodles import context_processors
-from noodles.tests.models import ActiveTogglerConcrete, TitleDateSlugConcrete
+from noodles.tests.models import NameSlugConcrete, ActiveTogglerConcrete, TitleDateSlugConcrete, LittleSluggerConcrete, BadLittleSluggerConcrete, LittleSluggerConcreteNoPersist
 from noodles import util
 
 
@@ -38,6 +40,17 @@ class EmailTestCase(TestCase):
         Test email list fallback mechanism
         """
         self.assertEquals(["nobody@somewhere.com"], util.get_email_send_to_list())
+    
+    
+    def test_post_save_hook(self):
+        """
+        Test the post_save hook on saving contact submissions
+        
+        Just a coverage test, there doesnt seem to be any way to actually see
+        the mail.outbox result from this
+        """
+        submission = ContactSubmission(name="Noone", email="noone@somewhere.com", message="Hi There")
+        submission.save()
 
 
 class ContextProcessorTestCase(TestCase):
@@ -71,6 +84,7 @@ class ContextProcessorTestCase(TestCase):
         """
         self.assertEquals(context_processors.site("fake_request")["SITE_NAME"], "example.com")
         self.assertEquals(context_processors.site("fake_request")["SITE_URL"], "http://example.com")
+
 
 class FakeRequest(object):
     """
@@ -146,6 +160,78 @@ class ActiveTogglerTestCase(TestCase):
         
         self.assertEquals(ActiveTogglerConcrete.objects.filter(active=True).count(), 1)
         
+
+class LittleSluggerTestCase(TestCase):
+    """
+    Tests for the LittleSlugger abstract test case
+    """
+    def test_bad_slug_target(self):
+        """
+        Test poor (or lacking) get_slug_target implementations
+        """
+        bad = BadLittleSluggerConcrete()
+        with self.assertRaises(NotImplementedError):
+            bad.save()
+    
+    def test_slug_target(self):
+        """
+        Test well implementeed get_slug_target
+        """
+        fine = LittleSluggerConcrete(slug_target="Hello")
+        fine.save()
+        self.assertEquals("Hello", fine.slug_target)
+        self.assertEquals("slug_target", fine.get_slug_target())
+        self.assertEquals("Hello", fine.__unicode__())
+        self.assertEquals("hello", fine.slug)
+    
+    def test_persisting_resave(self):
+        """
+        Test resaving objects with persisting slug
+        """
+        fine = LittleSluggerConcrete(slug_target="Hello")
+        fine.save()
+        self.assertEquals("hello", fine.slug)
+        fine.slug_target = "Hello World"
+        fine.save()
+        self.assertEquals("hello", fine.slug)
+        
+    def test_not_persisting_resave(self):
+        """
+        Test resaving objects without a persisting slug
+        """
+        fine = LittleSluggerConcreteNoPersist(slug_target="Hello")
+        fine.save()
+        self.assertEquals("hello", fine.slug)
+        fine.slug_target = "Hello World"
+        fine.save()
+        self.assertEquals("hello-world", fine.slug)
+
+
+class NameSlugTestCase(TestCase):
+    """
+    Tests relating to NameSlug abstract model
+    """
+    def test_name_slug_properties(self):
+        """
+        Test the properties setup for NameSlug
+        """
+        name_slug = NameSlugConcrete(name="Something")
+        name_slug.save()
+        self.assertEquals(name_slug.get_slug_target(), "name")
+        self.assertEquals(name_slug.__unicode__(), "Something")
+        self.assertEquals(name_slug.slug, "something")
+    
+    def test_name_slug_persist(self):
+        """
+        NameSlug models should have a persistant slug
+        """
+        name_slug = NameSlugConcrete(name="Something")
+        name_slug.save()
+        self.assertEquals(name_slug.slug, "something")
+        name_slug.name = "Something Else"
+        name_slug.save()
+        self.assertEquals(name_slug.slug, "something")
+
 
 class TitleDateSlugTestCase(TestCase):
     """
