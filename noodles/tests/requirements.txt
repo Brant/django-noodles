@@ -4,3 +4,4 @@ django_nose
 nose
 nose_exclude
 nosexcover
+pil
