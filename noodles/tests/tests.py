@@ -5,11 +5,39 @@ from datetime import datetime
 
 from django.test import TestCase
 from django.conf import settings
+from django.test.utils import override_settings
 
 from noodles.templatetags.noodles_tags import insidenav
 from noodles.models import TitleDateSlug, ActiveToggler, SiteMeta
 from noodles import context_processors
 from noodles.tests.models import ActiveTogglerConcrete, TitleDateSlugConcrete
+from noodles import util
+
+class EmailTestCase(TestCase):
+    """
+    Tests relating to email list mechanisms
+    """
+    def test_email_send_to_list_default(self):
+        """
+        Test empty ADMINS list and empty NOODLES_EMAIL_LIST
+        """
+        self.assertEquals([], util.get_email_send_to_list())
+
+    @override_settings(ADMINS=[("Some Guy", "someone@nowhere.com"),])
+    def test_email_send_to_list_fallback(self):
+        """
+        Test email list fallback mechanism
+        """
+        self.assertEquals(["someone@nowhere.com"], util.get_email_send_to_list())
+    
+    @override_settings(ADMINS=[("Some Guy", "someone@nowhere.com"),])
+    @override_settings(NOODLES_EMAIL_LIST=["nobody@somewhere.com"])
+    def test_email_send_to_list(self):
+        """
+        Test email list fallback mechanism
+        """
+        self.assertEquals(["nobody@somewhere.com"], util.get_email_send_to_list())
+
 
 class ContextProcessorTestCase(TestCase):
     """
