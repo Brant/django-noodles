@@ -13,6 +13,7 @@ from noodles import context_processors
 from noodles.tests.models import ActiveTogglerConcrete, TitleDateSlugConcrete
 from noodles import util
 
+
 class EmailTestCase(TestCase):
     """
     Tests relating to email list mechanisms
