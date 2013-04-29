@@ -25,3 +25,4 @@ style-*_.css
 .project
 .pydevproject
 env/
+_tmp.png

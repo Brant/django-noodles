@@ -29,21 +29,24 @@ class AssetFromImageTestCase(TestCase):
         """
         
         self.path = os.path.dirname(os.path.abspath(__file__))
-        self.save_path = os.path.join(self.path, "_tmp.jpg")
-        self.image_path = os.path.join(self.path, "happy.jpg")
+        self.save_path = os.path.join(self.path, "_tmp.png")
+        self.image_path = os.path.join(self.path, "happy.png")
         self.handler = AssetsFromImageHandler(self.image_path)
 #         self.assertEquals(self.handler._ratio, float(float(2)/float(3)))
     
-    def test_not_saving(self):
+    def test_forced_size(self):
         """
-        Test some features of the asset handler without saving
+        Test forcing image to a size
         """
-#         buffered_image = self.handler.buffer_image(200, 100, self.save_path)
-#         self.assertEquals(buffered_image.size[1], 700)
-#         print buffered_image.size
         sized_image = self.handler.create_any_size(100, 200)
         self.assertEquals(sized_image.size[0], 100)
         self.assertEquals(sized_image.size[0], 200)
+    
+    def tearDown(self):
+        """
+        Remove temp file(s)
+        """
+        os.unlink(self.save_path)
 
 class ContactTestCase(TestCase):
     """
