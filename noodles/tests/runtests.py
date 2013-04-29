@@ -33,8 +33,9 @@ if not settings.configured:
 from django_nose.runner import NoseTestSuiteRunner
 
 def runtests():
+#     runner = DjangoTestSuiteRunner()
     runner = NoseTestSuiteRunner()
-    failures = runner.run_tests(['noodles'])
+    failures = runner.run_tests(['tests'])
     sys.exit(failures)
 
 if __name__ == '__main__':

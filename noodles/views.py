@@ -29,8 +29,8 @@ def contact(request):
     return render_to_response("noodles/contact.html", response_data, context_instance=RequestContext(request))
 
 
-def contact_thanks(request):
+def contact_thanks(request, template_name="noodles/contact_thanks.html"):
     """
     Thank you page, after a contact submission
     """
-    return render_to_response("noodles/contact_thanks.html", {}, context_instance=RequestContext(request))
+    return render_to_response(template_name, {}, context_instance=RequestContext(request))

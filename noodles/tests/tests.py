@@ -6,14 +6,39 @@ from datetime import datetime
 from django.test import TestCase
 from django.conf import settings
 from django.test.utils import override_settings
-from django.core import mail
-from django.core.mail import EmailMessage
+from django.test.client import Client
 
 from noodles.templatetags.noodles_tags import insidenav
-from noodles.models import TitleDateSlug, ActiveToggler, SiteMeta, ContactSubmission
+from noodles.models import SiteMeta, ContactSubmission
 from noodles import context_processors
 from noodles.tests.models import NameSlugConcrete, ActiveTogglerConcrete, TitleDateSlugConcrete, LittleSluggerConcrete, BadLittleSluggerConcrete, LittleSluggerConcreteNoPersist
 from noodles import util
+from noodles.tests.util import FakeRequest
+
+
+class ContactTestCase(TestCase):
+    """
+    Tests relating to Contact Form
+    """
+    urls = "noodles.tests.urls"
+    
+    def setUp(self):
+        """
+        Set some things up
+        """
+        self.client = Client()
+    
+    def test_render_form(self):
+        """
+        Test rendering of contact form from template inclusion tag
+        """
+        resp = self.client.get("/")
+    
+    def test_post_data(self):
+        self.assertEquals(ContactSubmission.objects.all().count(), 0)
+        resp = self.client.post("/contact/", {"name": "Timmy Tommy", "email": "my@email.com", "message": "Hi there!"}, follow=True)
+        self.assertEquals(ContactSubmission.objects.all().count(), 1)
+        self.assertTemplateUsed(resp, "noodles/tests/contact_thanks.html")
 
 
 class EmailTestCase(TestCase):
@@ -86,17 +111,11 @@ class ContextProcessorTestCase(TestCase):
         self.assertEquals(context_processors.site("fake_request")["SITE_URL"], "http://example.com")
 
 
-class FakeRequest(object):
-    """
-    just provide a few things for testing purposes
-    to mimic a request object
-    """
-    def __init__(self, path):
-        self.path = unicode(path) 
-
-
 class InsideNavTestCase(TestCase):
-    urls = "noodles.test_urls"
+    """
+    Tests for insidenav template filter
+    """
+    urls = "noodles.tests.urls"
     
     def setUp(self):
         """

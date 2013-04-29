@@ -1,8 +1,8 @@
-<form method="post" action="{% url contact %}" class="contact-form">
+{% load url from future %}
+
+<form method="post" action="{% url "contact" %}" class="contact-form">
 	{% csrf_token %}
-	
 	{{ form.as_p }}
-	
 	<p class="contact-submit"><input type="submit" value="Send" /></p>	
 </form>
 
