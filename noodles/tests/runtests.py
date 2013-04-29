@@ -29,11 +29,11 @@ if not settings.configured:
     )
 
 
-# from django.test.simple import DjangoTestSuiteRunner
+from django.test.simple import DjangoTestSuiteRunner
 from django_nose.runner import NoseTestSuiteRunner
 
 def runtests():
-#     runner = DjangoTestSuiteRunner()
+    runner = DjangoTestSuiteRunner()
     runner = NoseTestSuiteRunner()
     failures = runner.run_tests(['tests'])
     sys.exit(failures)

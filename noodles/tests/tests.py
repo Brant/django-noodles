@@ -1,6 +1,8 @@
 """
 Noodles Tests
 """
+import os
+
 from datetime import datetime
 
 from django.test import TestCase
@@ -13,8 +15,35 @@ from noodles.models import SiteMeta, ContactSubmission
 from noodles import context_processors
 from noodles.tests.models import NameSlugConcrete, ActiveTogglerConcrete, TitleDateSlugConcrete, LittleSluggerConcrete, BadLittleSluggerConcrete, LittleSluggerConcreteNoPersist
 from noodles import util
+from noodles.util import AssetsFromImageHandler
 from noodles.tests.util import FakeRequest
 
+
+
+class AssetFromImageTestCase(TestCase):
+    """
+    Tests relating to converting an image into assets
+    """
+    def setUp(self):
+        """
+        """
+        
+        self.path = os.path.dirname(os.path.abspath(__file__))
+        self.save_path = os.path.join(self.path, "_tmp.jpg")
+        self.image_path = os.path.join(self.path, "happy.jpg")
+        self.handler = AssetsFromImageHandler(self.image_path)
+#         self.assertEquals(self.handler._ratio, float(float(2)/float(3)))
+    
+    def test_not_saving(self):
+        """
+        Test some features of the asset handler without saving
+        """
+#         buffered_image = self.handler.buffer_image(200, 100, self.save_path)
+#         self.assertEquals(buffered_image.size[1], 700)
+#         print buffered_image.size
+        sized_image = self.handler.create_any_size(100, 200)
+        self.assertEquals(sized_image.size[0], 100)
+        self.assertEquals(sized_image.size[0], 200)
 
 class ContactTestCase(TestCase):
     """

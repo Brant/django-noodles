@@ -47,8 +47,7 @@ class AssetsFromImageHandler(object):
     """
     Utility class for to handle creating various assets
         at various dimensions from a given image
-    """
-    
+    """    
     def __init__(self, original_file_path, quality=100):
         """
         Instantiate with original ratio and file path
