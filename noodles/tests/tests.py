@@ -32,14 +32,21 @@ class ContactTestCase(TestCase):
         """
         Test rendering of contact form from template inclusion tag
         """
-        resp = self.client.get("/")
-        resp = self.client.get("/contact/")
+        self.client.get("/")
+        self.client.get("/contact/")
     
     def test_post_data(self):
+        """
+        Test post data handling for form
+        """
         self.assertEquals(ContactSubmission.objects.all().count(), 0)
         resp = self.client.post("/contact/", {"name": "Timmy Tommy", "email": "my@email.com", "message": "Hi there!"}, follow=True)
         self.assertEquals(ContactSubmission.objects.all().count(), 1)
         self.assertTemplateUsed(resp, "noodles/tests/contact_thanks.html")
+        submission = ContactSubmission.objects.all()[0]
+        self.assertEquals(submission.email, "my@email.com")
+        self.assertEquals(submission.name, "Timmy Tommy")
+        self.assertEquals(submission.message, "Hi there!")
 
 
 class EmailTestCase(TestCase):
