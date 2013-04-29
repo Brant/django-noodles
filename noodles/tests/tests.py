@@ -33,6 +33,7 @@ class ContactTestCase(TestCase):
         Test rendering of contact form from template inclusion tag
         """
         resp = self.client.get("/")
+        resp = self.client.get("/contact/")
     
     def test_post_data(self):
         self.assertEquals(ContactSubmission.objects.all().count(), 0)
