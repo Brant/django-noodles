@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from noodles.forms import ContactForm
 
 
-def contact(request):
+def contact(request, template_name="noodles/contact.html"):
     """
     Contact form
     
@@ -26,7 +26,7 @@ def contact(request):
     
     response_data = { "form": form }
     
-    return render_to_response("noodles/contact.html", response_data, context_instance=RequestContext(request))
+    return render_to_response(template_name, response_data, context_instance=RequestContext(request))
 
 
 def contact_thanks(request, template_name="noodles/contact_thanks.html"):
