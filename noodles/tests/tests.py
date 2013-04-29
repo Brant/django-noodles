@@ -40,13 +40,16 @@ class AssetFromImageTestCase(TestCase):
         """
         sized_image = self.handler.create_any_size(100, 200)
         self.assertEquals(sized_image.size[0], 100)
-        self.assertEquals(sized_image.size[0], 200)
+        self.assertEquals(sized_image.size[1], 200)
     
     def tearDown(self):
         """
         Remove temp file(s)
         """
-        os.unlink(self.save_path)
+        try:
+            os.unlink(self.save_path)
+        except OSError:
+            pass
 
 class ContactTestCase(TestCase):
     """
