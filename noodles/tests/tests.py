@@ -19,20 +19,19 @@ from noodles.util import AssetsFromImageHandler
 from noodles.tests.util import FakeRequest
 
 
-
 class AssetFromImageTestCase(TestCase):
     """
     Tests relating to converting an image into assets
     """
     def setUp(self):
         """
+        Set some initial things up
         """
-        
         self.path = os.path.dirname(os.path.abspath(__file__))
-        self.save_path = os.path.join(self.path, "_tmp.png")
+        self.save_dir = os.path.join(self.path, "tmp")
+        self.save_path = os.path.join(self.save_dir, "_tmp.png")
         self.image_path = os.path.join(self.path, "happy.png")
         self.handler = AssetsFromImageHandler(self.image_path)
-#         self.assertEquals(self.handler._ratio, float(float(2)/float(3)))
     
     def test_forced_size(self):
         """
@@ -41,13 +40,60 @@ class AssetFromImageTestCase(TestCase):
         sized_image = self.handler.create_any_size(100, 200)
         self.assertEquals(sized_image.size[0], 100)
         self.assertEquals(sized_image.size[1], 200)
+        sized_image = self.handler.create_any_size(100, 200, save_path=self.save_path)
+        self.assertEquals(sized_image.size[0], 100)
+        self.assertEquals(sized_image.size[1], 200)
     
+    def test_forced_height(self):
+        """
+        Test sizing based on a height value
+        Should maintain ratio
+        """
+        sized_image = self.handler.create_height(100)
+        self.assertEquals(sized_image.size[1], 100)
+        self.assertEquals(sized_image.size[0], 150)
+        sized_image = self.handler.create_height(100, save_path=self.save_path)
+        self.assertEquals(sized_image.size[1], 100)
+        self.assertEquals(sized_image.size[0], 150)
+        
+    def test_forced_width(self):
+        """
+        Test sizing based on a height value
+        Should maintain ratio
+        """
+        sized_image = self.handler.create_width(100)
+        self.assertEquals(sized_image.size[0], 100)
+        self.assertEquals(sized_image.size[1], 66)
+        sized_image = self.handler.create_width(100, save_path=self.save_path)
+        self.assertEquals(sized_image.size[0], 100)
+        self.assertEquals(sized_image.size[1], 66)
+    
+    def test_buffered_size(self):
+        """
+        Test adding buffers based on ratio sizes
+        """
+        sized_image = self.handler.buffer_image(1000, 100)
+        self.assertEquals(sized_image.size[0] / sized_image.size[1], 1000 / 100)
+        sized_image = self.handler.buffer_image(1000, 100, save_path=self.save_path)
+        self.assertEquals(sized_image.size[0] / sized_image.size[1], 1000 / 100)
+        
+        sized_image = self.handler.buffer_image(100, 1000)
+        self.assertEquals(sized_image.size[0] / sized_image.size[1], 100 / 1000)
+        sized_image = self.handler.buffer_image(100, 1000, save_path=self.save_path)
+        self.assertEquals(sized_image.size[0] / sized_image.size[1], 100 / 1000)
+        
+        sized_image = self.handler.buffer_image(500, 333)
+        self.assertEquals(sized_image.size[0] / sized_image.size[1], 500 / 333)
+        sized_image = self.handler.buffer_image(500, 333, save_path=self.save_path)
+        self.assertEquals(sized_image.size[0] / sized_image.size[1], 500 / 333)
+        
     def tearDown(self):
         """
         Remove temp file(s)
         """
         try:
             os.unlink(self.save_path)
+            os.removedirs(self.save_dir)
         except OSError:
             pass
 
