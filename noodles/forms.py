@@ -26,4 +26,3 @@ class ContactForm(forms.ModelForm):
         """
         model = ContactSubmission
         exclude = ["date"]
-        

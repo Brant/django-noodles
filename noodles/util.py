@@ -27,7 +27,6 @@ def make_paginator(request, queryset, per_page=5):
     
     Centralizes how many items per page
     """
-    
     paginator = Paginator(queryset, per_page)
     
     try:
