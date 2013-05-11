@@ -41,3 +41,10 @@ def site_meta(request):
     for data in META:
         SITE_META.update({data.key: data.value})    
     return {'SITE_META': SITE_META}
+
+
+def noodle_processors(request):
+    """
+    ALL THE NOODLES!
+    """
+    return site(request).update(site_meta(request)).update(static_paths(request))
