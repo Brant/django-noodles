@@ -60,8 +60,6 @@ class HalfQuarterTestcase(TestCase):
         """
         half_quarter = HalfQuarterAssetsConcrete(some_image="images/happy.png")
         half_quarter.save()
-        
-    
 
 
 class AssetFromImageTestCase(TestCase):
