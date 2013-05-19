@@ -249,6 +249,15 @@ class ContextProcessorTestCase(TestCase):
         """
         self.assertEquals(context_processors.site("fake_request")["SITE_NAME"], "example.com")
         self.assertEquals(context_processors.site("fake_request")["SITE_URL"], "http://example.com")
+    
+    @override_settings(TEMPLATE_CONTEXT_PROCESSORS=('noodles.context_processors.noodle_processors', ))
+    def test_all_noodles(self):
+        """
+        Test the processor that adds all processors
+        """
+        client = Client()
+        resp = client.get("/processors/")
+        self.assertIn(settings.STATIC_URL, str(resp))
 
 
 class InsideNavTestCase(TestCase):
