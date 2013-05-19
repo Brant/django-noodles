@@ -7,6 +7,25 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.conf import settings
 
 
+class AssetFromImage:
+    """
+    Represents an asset produced from ImageFields by models.AssetsFromImagesMixin
+    """
+    def __init__(self, path):
+        """
+        save path to asset and produce 
+            url for asset based on static_url
+        """
+        self._path = path
+        self.url = "%s%s" % (settings.STATIC_URL, path)
+        
+    def __unicode__(self):
+        return u"%s" % self._path
+    
+    def __str__(self):
+        return "%s" % self._path
+
+
 def get_email_send_to_list():
     """
     Returns a list of addresses to send correspondance to
@@ -52,9 +71,9 @@ class AssetsFromImageHandler(object):
         Instantiate with original ratio and file path
         """
         self._image = Image.open(original_file_path)
-        original_w = self._image.size[0]
-        original_h = self._image.size[1]
-        self._ratio = float(original_h) / float(original_w)
+        self.original_w = self._image.size[0]
+        self.original_h = self._image.size[1]
+        self._ratio = float(self.original_h) / float(self.original_w)
         self._quality = quality
     
     def buffer_image(self, width, height, save_path=None):

@@ -1,6 +1,8 @@
 """
 Some abstract models
 """
+import os
+import ast
 from datetime import timedelta, datetime
 
 from django.db import models
@@ -11,7 +13,71 @@ from django.dispatch import receiver
 from django.core.mail import EmailMessage
 from django.conf import settings
 
-from noodles.util import get_email_send_to_list
+from noodles.util import get_email_send_to_list, AssetFromImage
+from noodles.asset_handlers import ModelAssetsFromImageHandler
+
+
+class AssetsFromImagesMixin(models.Model):
+    """
+    Base, abstract model for producing assets from image fields
+        Responsible for assigning dynamic asset attributes
+        and generating the charfield to hold asset dict
+    """
+    def __init__(self, *args, **kwargs):
+        """
+        Set up custom attributes for assets
+        """
+        super(AssetsFromImagesMixin, self).__init__(*args, **kwargs)
+        
+        if self.assets_from_images:
+            my_dict = ast.literal_eval(self.assets_from_images)
+            if isinstance(my_dict, dict):
+                for item in my_dict:
+                    setattr(self, "%s" % item, AssetFromImage(my_dict[item]))
+
+    assets_from_images = models.CharField(max_length=1000, blank=True, null=True, editable=False)
+    
+    class Meta:
+        """
+        Django metadata
+        """
+        abstract = True
+
+
+class HalfQuarterAssetsMixin(AssetsFromImagesMixin):
+    """
+    Produces a half size and a quarter size
+        of a models images
+    """
+    def save(self, *args, **kwargs):
+        """
+        custom save for asset creation
+        """
+        super(HalfQuarterAssetsMixin, self).save(*args, **kwargs)
+        asset_handler = ModelAssetsFromImageHandler(self)
+        
+        my_dict = {}
+        for the_handler in asset_handler._asset_handlers:
+            image_field = asset_handler._asset_handlers[the_handler]
+            save_path = os.path.join(settings.MEDIA_ROOT, image_field["path"], "half", image_field["filename"])
+            image_field["handler"].create_width(image_field["handler"].original_w / 2, save_path)
+            half_value = "/".join([(image_field["path"].lstrip("/").rstrip("/")), "half", image_field["filename"]])
+            
+            save_path = os.path.join(settings.MEDIA_ROOT, image_field["path"], "quarter", image_field["filename"])
+            image_field["handler"].create_width(image_field["handler"].original_w / 4, save_path)
+            quarter_value = "/".join([(image_field["path"].lstrip("/").rstrip("/")), "quarter", image_field["filename"]])
+            
+            my_dict.update({"%s_half" % the_handler: half_value, "%s_quarter" % the_handler: quarter_value})
+            
+        self.assets_from_images = my_dict
+            
+        super(HalfQuarterAssetsMixin, self).save(*args, **kwargs)
+    
+    class Meta:
+        """
+        Django metadata
+        """
+        abstract = True        
 
 
 def find_slug_matches(obj, slug):
