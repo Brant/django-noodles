@@ -6,4 +6,4 @@ from django.template import RequestContext
 
 
 def home(request):
-    return render_to_response("noodles/tests/render_contact_form.html", {}, context_instance=RequestContext(request))
+    return render_to_response("noodles_tests/render_contact_form.html", {}, context_instance=RequestContext(request))

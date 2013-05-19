@@ -174,7 +174,7 @@ class ContactTestCase(TestCase):
         self.assertEquals(ContactSubmission.objects.all().count(), 0)
         resp = self.client.post("/contact/", {"name": "Timmy Tommy", "email": "my@email.com", "message": "Hi there!"}, follow=True)
         self.assertEquals(ContactSubmission.objects.all().count(), 1)
-        self.assertTemplateUsed(resp, "noodles/tests/contact_thanks.html")
+        self.assertTemplateUsed(resp, "noodles_tests/contact_thanks.html")
         submission = ContactSubmission.objects.all()[0]
         self.assertEquals(submission.email, "my@email.com")
         self.assertEquals(submission.name, "Timmy Tommy")
