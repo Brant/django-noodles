@@ -2,6 +2,7 @@
 Noodles Tests
 """
 import os
+import shutil
 
 from datetime import datetime
 
@@ -13,10 +14,54 @@ from django.test.client import Client
 from noodles.templatetags.noodles_tags import insidenav
 from noodles.models import SiteMeta, ContactSubmission
 from noodles import context_processors
-from noodles_tests.models import NameSlugConcrete, ActiveTogglerConcrete, TitleDateSlugConcrete, LittleSluggerConcrete, BadLittleSluggerConcrete, LittleSluggerConcreteNoPersist
+
+from noodles_tests.models import (
+    NameSlugConcrete, ActiveTogglerConcrete, 
+    TitleDateSlugConcrete, LittleSluggerConcrete, 
+    BadLittleSluggerConcrete, LittleSluggerConcreteNoPersist, 
+    HalfQuarterAssetsConcrete
+)
+
 from noodles import util
 from noodles.util import AssetsFromImageHandler
 from noodles_tests.util import FakeRequest
+
+
+this_dir = os.path.dirname(os.path.abspath(__file__))
+class HalfQuarterTestcase(TestCase):
+    """
+    Test implementation of Half/Quarter assets mixin
+    """
+    def setUp(self):
+        """
+        Set some initial things up
+        """
+        self.path = os.path.dirname(os.path.abspath(__file__))
+        self.save_dir = os.path.join(self.path, "tmp/images")
+        
+        if not os.path.isdir(self.save_dir):
+            os.makedirs(self.save_dir)
+        
+        self.image_path = os.path.join(self.path, "happy.png")
+        shutil.copy(self.image_path, os.path.join(self.save_dir, "happy.png"))
+    
+    def tearDown(self):
+        """
+        Delete directories
+        """
+        if os.path.isdir(os.path.join(this_dir, "tmp")):
+            shutil.rmtree(os.path.join(this_dir, "tmp"))
+        
+    
+    @override_settings(MEDIA_ROOT=os.path.join(this_dir, "tmp"))
+    def test_saving_assets(self):
+        """
+        See if we can save some assets
+        """
+        half_quarter = HalfQuarterAssetsConcrete(some_image="images/happy.png")
+        half_quarter.save()
+        
+    
 
 
 class AssetFromImageTestCase(TestCase):

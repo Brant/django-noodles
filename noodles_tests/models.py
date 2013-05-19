@@ -2,7 +2,14 @@
 Concrete models for test cases
 """
 from django.db import models
-from noodles.models import TitleDateSlug, ActiveToggler, LittleSlugger, NameSlug
+from noodles.models import TitleDateSlug, ActiveToggler, LittleSlugger, NameSlug, HalfQuarterAssetsMixin
+
+
+class HalfQuarterAssetsConcrete(HalfQuarterAssetsMixin, models.Model):
+    """
+    Implenetation with an image field
+    """
+    some_image = models.ImageField(upload_to="images")
 
 
 class NameSlugConcrete(NameSlug):
