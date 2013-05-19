@@ -16,14 +16,14 @@ class AssetFromImage:
         save path to asset and produce 
             url for asset based on static_url
         """
-        self._path = path
+        self.path = path
         self.url = "%s%s" % (settings.STATIC_URL, path)
         
     def __unicode__(self):
-        return u"%s" % self._path
+        return u"%s" % self.path
     
     def __str__(self):
-        return "%s" % self._path
+        return "%s" % self.path
 
 
 def get_email_send_to_list():

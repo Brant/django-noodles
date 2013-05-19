@@ -59,8 +59,13 @@ class HalfQuarterTestcase(TestCase):
         """
         half_quarter = HalfQuarterAssetsConcrete(some_image="images/happy.png")
         half_quarter.save()
+        
         self.assertEquals(str(half_quarter.some_image_half), "images/half/happy.png")
         self.assertEquals(str(half_quarter.some_image_quarter), "images/quarter/happy.png")
+        
+        self.assertEquals(unicode(half_quarter.some_image_half), "images/half/happy.png")
+        self.assertEquals(unicode(half_quarter.some_image_quarter), "images/quarter/happy.png")
+        
         self.assertEquals(half_quarter.some_image_quarter.url, "/static/images/quarter/happy.png")
         self.assertEquals(half_quarter.some_image_half.url, "/static/images/half/happy.png")
 
