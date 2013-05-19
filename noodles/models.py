@@ -28,14 +28,23 @@ class AssetsFromImagesMixin(models.Model):
         Set up custom attributes for assets
         """
         super(AssetsFromImagesMixin, self).__init__(*args, **kwargs)
-        
+        self._assign_mixin_attrs()
+    
+    def _assign_mixin_attrs(self):
         if self.assets_from_images:
-            my_dict = ast.literal_eval(self.assets_from_images)
+            my_dict = ast.literal_eval(str(self.assets_from_images))
             if isinstance(my_dict, dict):
                 for item in my_dict:
                     setattr(self, "%s" % item, AssetFromImage(my_dict[item]))
-
+    
     assets_from_images = models.CharField(max_length=1000, blank=True, null=True, editable=False)
+    
+    def save(self, *args, **kwargs):
+        """
+        Assign attributes after save
+        """
+        super(AssetsFromImagesMixin, self).save(*args, **kwargs)
+        self._assign_mixin_attrs()
     
     class Meta:
         """

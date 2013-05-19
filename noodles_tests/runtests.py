@@ -33,7 +33,7 @@ from django_nose.runner import NoseTestSuiteRunner
 
 def runtests():
     runner = DjangoTestSuiteRunner()
-    runner = NoseTestSuiteRunner()
+#     runner = NoseTestSuiteRunner()
     failures = runner.run_tests(['noodles_tests'])
     sys.exit(failures)
 

@@ -52,7 +52,6 @@ class HalfQuarterTestcase(TestCase):
         if os.path.isdir(os.path.join(this_dir, "tmp")):
             shutil.rmtree(os.path.join(this_dir, "tmp"))
         
-    
     @override_settings(MEDIA_ROOT=os.path.join(this_dir, "tmp"))
     def test_saving_assets(self):
         """
@@ -60,6 +59,10 @@ class HalfQuarterTestcase(TestCase):
         """
         half_quarter = HalfQuarterAssetsConcrete(some_image="images/happy.png")
         half_quarter.save()
+        self.assertEquals(str(half_quarter.some_image_half), "images/half/happy.png")
+        self.assertEquals(str(half_quarter.some_image_quarter), "images/quarter/happy.png")
+        self.assertEquals(half_quarter.some_image_quarter.url, "/static/images/quarter/happy.png")
+        self.assertEquals(half_quarter.some_image_half.url, "/static/images/half/happy.png")
 
 
 class AssetFromImageTestCase(TestCase):
