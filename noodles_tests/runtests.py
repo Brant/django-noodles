@@ -13,13 +13,13 @@ if not settings.configured:
         },
         INSTALLED_APPS=[
             'noodles',
-            'noodles.tests',
+            'noodles_tests',
             'django.contrib.sites',
             'django_nose'
         ],
         SITE_ID = 1,
         STATIC_URL = '/static/',
-        ROOT_URLCONF = 'noodles.tests.urls',
+        ROOT_URLCONF = 'noodles_tests.urls',
 #         TEST_RUNNER = "django_nose.runner.NoseTestSuiteRunner",
         NOSE_ARGS = ["--with-xcoverage", "--cover-inclusive", "--with-xunit", "--exe", "--verbosity=3", "--cover-package=noodles"],
         NOSE_PLUGINS = [
@@ -35,7 +35,7 @@ from django_nose.runner import NoseTestSuiteRunner
 def runtests():
     runner = DjangoTestSuiteRunner()
     runner = NoseTestSuiteRunner()
-    failures = runner.run_tests(['tests'])
+    failures = runner.run_tests(['noodles_tests'])
     sys.exit(failures)
 
 if __name__ == '__main__':

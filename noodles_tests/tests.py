@@ -13,10 +13,10 @@ from django.test.client import Client
 from noodles.templatetags.noodles_tags import insidenav
 from noodles.models import SiteMeta, ContactSubmission
 from noodles import context_processors
-from noodles.tests.models import NameSlugConcrete, ActiveTogglerConcrete, TitleDateSlugConcrete, LittleSluggerConcrete, BadLittleSluggerConcrete, LittleSluggerConcreteNoPersist
+from noodles_tests.models import NameSlugConcrete, ActiveTogglerConcrete, TitleDateSlugConcrete, LittleSluggerConcrete, BadLittleSluggerConcrete, LittleSluggerConcreteNoPersist
 from noodles import util
 from noodles.util import AssetsFromImageHandler
-from noodles.tests.util import FakeRequest
+from noodles_tests.util import FakeRequest
 
 
 class AssetFromImageTestCase(TestCase):
@@ -101,7 +101,7 @@ class ContactTestCase(TestCase):
     """
     Tests relating to Contact Form
     """
-    urls = "noodles.tests.urls"
+    urls = "noodles_tests.urls"
     
     def setUp(self):
         """
@@ -204,7 +204,7 @@ class InsideNavTestCase(TestCase):
     """
     Tests for insidenav template filter
     """
-    urls = "noodles.tests.urls"
+    urls = "noodles_tests.urls"
     
     def setUp(self):
         """
