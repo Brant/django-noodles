@@ -17,7 +17,7 @@ class AssetFromImage:
             url for asset based on static_url
         """
         self.path = path
-        self.url = "%s%s" % (settings.STATIC_URL, path)
+        self.url = "%s%s" % (settings.MEDIA_URL, path)
         
     def __unicode__(self):
         return u"%s" % self.path
