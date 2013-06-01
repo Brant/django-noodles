@@ -11,7 +11,7 @@ urlpatterns = patterns('noodles.views',
 )
 
 favicon_patterns = patterns('',
-    (r'^favicon\.ico', RedirectView.as_view(url=settings.STATIC_URL + 'favicon.ico'),
-    (r'^favicon\.png', RedirectView.as_view(url=settings.STATIC_URL + 'favicon.png'),
-    (r'^apple-touch-icon\.png$', RedirectView.as_view(url=settings.STATIC_URL + 'apple-touch-icon.png'),
+    url(r'^favicon\.ico', RedirectView.as_view(url=settings.STATIC_URL + 'favicon.ico'), name="favicon-ico"),
+    url(r'^favicon\.png', RedirectView.as_view(url=settings.STATIC_URL + 'favicon.png'), name="favicon-png"),
+    url(r'^apple-touch-icon\.png$', RedirectView.as_view(url=settings.STATIC_URL + 'apple-touch-icon.png'), name="apple-touch-png"),
 )
