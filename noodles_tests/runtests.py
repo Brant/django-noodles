@@ -19,6 +19,7 @@ if not settings.configured:
         ],
         SITE_ID = 1,
         STATIC_URL = '/static/',
+        MEDIA_URL = '/static/',
         ROOT_URLCONF = 'noodles_tests.urls',
         NOSE_ARGS = ["--with-xcoverage", "--cover-inclusive", "--with-xunit", "--exe", "--verbosity=3", "--cover-package=noodles"],
         NOSE_PLUGINS = [

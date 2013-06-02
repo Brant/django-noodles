@@ -66,8 +66,8 @@ class HalfQuarterTestcase(TestCase):
         self.assertEquals(unicode(half_quarter.some_image_half), "images/half/happy.png")
         self.assertEquals(unicode(half_quarter.some_image_quarter), "images/quarter/happy.png")
         
-        self.assertEquals(half_quarter.some_image_quarter.url, "/static/images/quarter/happy.png")
-        self.assertEquals(half_quarter.some_image_half.url, "/static/images/half/happy.png")
+        self.assertEquals(half_quarter.some_image_quarter.url, "/media/images/quarter/happy.png")
+        self.assertEquals(half_quarter.some_image_half.url, "/media/images/half/happy.png")
 
 
 class AssetFromImageTestCase(TestCase):
