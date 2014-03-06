@@ -13,13 +13,13 @@ class ModelAssetsFromImageHandler:
     def __init__(self, model_obj):
         self._asset_handlers = {}
         image_fields = []
-        
+
         for field in model_obj._meta.fields:
             if isinstance(field, ImageField):
                 image_fields.append((field, field.name))
-        
+
         for field, image_field in image_fields:
-            
+
             try:
                 filename = os.path.basename(getattr(model_obj, image_field).file.name)
             except ValueError:  # no image
@@ -27,11 +27,22 @@ class ModelAssetsFromImageHandler:
 
             if filename:
                 fileroot = settings.MEDIA_ROOT
-                filepath = getattr(model_obj, image_field).field.upload_to
-                file_fullpath = os.path.join(fileroot, filepath, filename)
+                obj_attr = getattr(model_obj, image_field)
+
+                file_fullpath = obj_attr.path
+
+                tmp = file_fullpath
+                if tmp.endswith(filename):
+                    tmp = tmp[0:len(tmp) - len(filename)]
+
+                if tmp.startswith(settings.MEDIA_ROOT):
+                    tmp = tmp[len(settings.MEDIA_ROOT)+1:-1]
+
+                filepath = tmp
+
                 self._asset_handlers.update({image_field: {"handler": AssetsFromImageHandler(file_fullpath), "path": filepath, "filename": filename}})
-            
+
         self.image_fields = image_fields
         self._model_obj = model_obj
 
-        
+
