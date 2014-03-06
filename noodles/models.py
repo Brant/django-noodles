@@ -29,23 +29,23 @@ class AssetsFromImagesMixin(models.Model):
         """
         super(AssetsFromImagesMixin, self).__init__(*args, **kwargs)
         self._assign_mixin_attrs()
-    
+
     def _assign_mixin_attrs(self):
         if self.assets_from_images:
             my_dict = ast.literal_eval(str(self.assets_from_images))
             if isinstance(my_dict, dict):
                 for item in my_dict:
                     setattr(self, "%s" % item, AssetFromImage(my_dict[item]))
-    
+
     assets_from_images = models.CharField(max_length=1000, blank=True, null=True, editable=False)
-    
+
     def save(self, *args, **kwargs):
         """
         Assign attributes after save
         """
         super(AssetsFromImagesMixin, self).save(*args, **kwargs)
         self._assign_mixin_attrs()
-    
+
     class Meta:
         """
         Django metadata
@@ -64,29 +64,29 @@ class HalfQuarterAssetsMixin(AssetsFromImagesMixin):
         """
         super(HalfQuarterAssetsMixin, self).save(*args, **kwargs)
         asset_handler = ModelAssetsFromImageHandler(self)
-        
+
         my_dict = {}
         for the_handler in asset_handler._asset_handlers:
             image_field = asset_handler._asset_handlers[the_handler]
             save_path = os.path.join(settings.MEDIA_ROOT, image_field["path"], "half", image_field["filename"])
             image_field["handler"].create_width(image_field["handler"].original_w / 2, save_path)
             half_value = "/".join([(image_field["path"].lstrip("/").rstrip("/")), "half", image_field["filename"]])
-            
+
             save_path = os.path.join(settings.MEDIA_ROOT, image_field["path"], "quarter", image_field["filename"])
             image_field["handler"].create_width(image_field["handler"].original_w / 4, save_path)
             quarter_value = "/".join([(image_field["path"].lstrip("/").rstrip("/")), "quarter", image_field["filename"]])
-            
-            my_dict.update({"%s_half" % the_handler: half_value, "%s_quarter" % the_handler: quarter_value})
-            
+
+            my_dict.update({"%s_half" % the_handler: half_value.replace("\\", "/"), "%s_quarter" % the_handler: quarter_value.replace("\\", "/")})
+
         self.assets_from_images = my_dict
-            
+
         super(HalfQuarterAssetsMixin, self).save(*args, **kwargs)
-    
+
     class Meta:
         """
         Django metadata
         """
-        abstract = True        
+        abstract = True
 
 
 def find_slug_matches(obj, slug):
@@ -127,10 +127,10 @@ class LittleSlugger(models.Model):
     Model for slugifying some attribute
     """
     slug = models.CharField(max_length=300, editable=False, blank=True)
-    
+
     def __unicode__(self):
         return getattr(self, self.get_slug_target())
-    
+
     class Meta:
         """
         Remember to inherit if needed
@@ -171,34 +171,34 @@ class NameSlug(LittleSlugger):
     gives a 'name' attribute and slug for that name
     """
     name = models.CharField(max_length=300)
-    
+
     def get_slug_target(self):
-        """ 
+        """
         Implementing required method
         """
         return 'name'
-    
+
     class Meta:
         """
         Django metadata
         """
         abstract = True
-        
+
 
 class NameSlugActive(NameSlug):
     """
     Inherits a name and a slug
-    
+
     also gives an 'active' field
     """
     active = models.BooleanField(default=True)
-    
+
     class Meta:
         """
         Django metadata
         """
         abstract = True
-        
+
 
 class ContactSubmission(models.Model):
     """
@@ -208,7 +208,7 @@ class ContactSubmission(models.Model):
     email = models.EmailField()
     message = models.TextField()
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    
+
 
 @receiver(post_save, sender=ContactSubmission, dispatch_uid="Noodle_Contact_Submission")
 def send_notification_email(sender, **kwargs):
@@ -218,41 +218,41 @@ def send_notification_email(sender, **kwargs):
     if kwargs["created"]:
         submission = kwargs["instance"]
         EmailMessage(
-            "%s Contact from %s" % (settings.EMAIL_SUBJECT_PREFIX, submission.name), 
-            "Name: %s\nEmail: %s\n\nMessage:\n%s" % (submission.name, submission.email, submission.message),  
+            "%s Contact from %s" % (settings.EMAIL_SUBJECT_PREFIX, submission.name),
+            "Name: %s\nEmail: %s\n\nMessage:\n%s" % (submission.name, submission.email, submission.message),
             settings.DEFAULT_FROM_EMAIL,
             get_email_send_to_list(),
             headers = {"Reply-To": submission.email}
         ).send(fail_silently=True)
-    
+
 
 class TitleDateSlug(LittleSlugger):
     """
     Abstract model that provides a few things
-    
+
     Title turns to slug
     Date can be used for whatever
     """
     title = models.CharField(max_length=900)
     date = models.DateTimeField(blank=True)
-    
+
     def get_slug_target(self):
-        """ 
+        """
         Implementing required method
         """
         return 'title'
-    
+
     def save(self, *args, **kwargs):
         """
         Custom save
-        
+
         - Slugifies title
         """
         if not self.date:
             self.date = datetime.now() + timedelta(days=5)
-            
+
         super(TitleDateSlug, self).save(*args, **kwargs)
-    
+
     class Meta:
         """
         Django metadata
@@ -263,17 +263,17 @@ class TitleDateSlug(LittleSlugger):
 class ActiveToggler(models.Model):
     """
     An 'active/deactive' toggle model
-    
+
     Only one on the type can be active at a time
     """
     active = models.BooleanField(default=False)
-    
+
     class Meta:
         """
         Django Meta
         """
         abstract = True
-    
+
     def save(self, *args, **kwargs):
         """
         Custom save to "toggle" all other actives to inactive
@@ -282,7 +282,7 @@ class ActiveToggler(models.Model):
             for obj in self.__class__.objects.filter(active=True):
                 obj.active = False
                 obj.save()
-                
+
         super(ActiveToggler, self).save(*args, **kwargs)
 
 
@@ -292,7 +292,7 @@ class SiteMeta(models.Model):
     """
     key = models.CharField(max_length=500)
     value = models.CharField(max_length=800)
-        
+
     class Meta:
         """
         Django Metadata
