@@ -76,7 +76,10 @@ class HalfQuarterAssetsMixin(AssetsFromImagesMixin):
             image_field["handler"].create_width(image_field["handler"].original_w / 4, save_path)
             quarter_value = "/".join([(image_field["path"].lstrip("/").rstrip("/")), "quarter", image_field["filename"]])
 
-            my_dict.update({"%s_half" % the_handler: half_value.replace("\\", "/"), "%s_quarter" % the_handler: quarter_value.replace("\\", "/")})
+            quarter_value = quarter_value.replace("\\", "/")
+            half_value = half_value.replace("\\", "/")
+
+            my_dict.update({"%s_half" % the_handler: half_value, "%s_quarter" % the_handler: quarter_value})
 
         self.assets_from_images = my_dict
 

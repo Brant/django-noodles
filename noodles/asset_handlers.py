@@ -38,9 +38,7 @@ class ModelAssetsFromImageHandler:
                 if tmp.startswith(settings.MEDIA_ROOT):
                     tmp = tmp[len(settings.MEDIA_ROOT)+1:-1]
 
-                filepath = tmp.replace("\\", "/")
-                file_fullpath = file_fullpath.replace("\\", "/")
-
+                filepath = tmp
 
                 self._asset_handlers.update({image_field: {"handler": AssetsFromImageHandler(file_fullpath), "path": filepath, "filename": filename}})
 
