@@ -10,7 +10,7 @@ from noodles.util import AssetsFromImageHandler
 
 
 class ModelAssetsFromImageHandler:
-    def __init__(self, model_obj):
+    def __init__(self, model_obj, quality=100):
         self._asset_handlers = {}
         image_fields = []
 
@@ -26,7 +26,6 @@ class ModelAssetsFromImageHandler:
                 filename = None
 
             if filename:
-                fileroot = settings.MEDIA_ROOT
                 obj_attr = getattr(model_obj, image_field)
 
                 file_fullpath = obj_attr.path
@@ -40,7 +39,7 @@ class ModelAssetsFromImageHandler:
 
                 filepath = tmp
 
-                self._asset_handlers.update({image_field: {"handler": AssetsFromImageHandler(file_fullpath), "path": filepath, "filename": filename}})
+                self._asset_handlers.update({image_field: {"handler": AssetsFromImageHandler(file_fullpath, quality), "path": filepath, "filename": filename}})
 
         self.image_fields = image_fields
         self._model_obj = model_obj
