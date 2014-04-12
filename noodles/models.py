@@ -53,6 +53,41 @@ class AssetsFromImagesMixin(models.Model):
         abstract = True
 
 
+class DefinedWidthsAssetsFromImagesMixin(AssetsFromImagesMixin):
+    """
+    Define some number of widths for a bunch of assets
+    """
+    class Meta:
+        """ Django metadata """
+        abstract = True
+
+    def get_quality(self):
+        return 75
+
+    def get_dimensions(self):
+        """ should return a list """
+        raise NotImplementedError("You must define the get_dimensions() method")
+
+    def save(self, *args, **kwargs):
+        super(DefinedWidthsAssetsFromImagesMixin, self).save(*args, **kwargs)
+        asset_handler = ModelAssetsFromImageHandler(self, self.get_quality())
+
+        my_dict = {}
+        for the_handler in asset_handler._asset_handlers:
+            image_field = asset_handler._asset_handlers[the_handler]
+
+            for width in self.get_dimensions():
+                save_path = os.path.join(settings.MEDIA_ROOT, image_field["path"], str(width), image_field["filename"])
+                image_field["handler"].create_width(width, save_path)
+                this_value = "/" . join([(image_field["path"].lstrip("/").rstrip("/")), str(width), image_field["filename"]])
+                this_value = this_value.replace("\\", "/")
+
+                my_dict.update({"%s_%s" % (the_handler, str(width)): this_value})
+
+        self.assets_from_images = my_dict
+        super(DefinedWidthsAssetsFromImagesMixin, self).save(*args, **kwargs)
+
+
 class HalfQuarterAssetsMixin(AssetsFromImagesMixin):
     """
     Produces a half size and a quarter size
@@ -68,6 +103,7 @@ class HalfQuarterAssetsMixin(AssetsFromImagesMixin):
         my_dict = {}
         for the_handler in asset_handler._asset_handlers:
             image_field = asset_handler._asset_handlers[the_handler]
+
             save_path = os.path.join(settings.MEDIA_ROOT, image_field["path"], "half", image_field["filename"])
             image_field["handler"].create_width(image_field["handler"].original_w / 2, save_path)
             half_value = "/".join([(image_field["path"].lstrip("/").rstrip("/")), "half", image_field["filename"]])
