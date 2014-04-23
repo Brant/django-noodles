@@ -37,7 +37,7 @@ class AssetsFromImagesMixin(models.Model):
                 for item in my_dict:
                     setattr(self, "%s" % item, AssetFromImage(my_dict[item]))
 
-    assets_from_images = models.CharField(max_length=1000, blank=True, null=True, editable=False)
+    assets_from_images = models.TextField(blank=True, null=True, editable=False)
 
     def save(self, *args, **kwargs):
         """
