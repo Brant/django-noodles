@@ -110,7 +110,6 @@ class AssetsFromImageHandler(object):
         Take self._image and return it at any size
             It will stretch if ratio is not maintained
         """
-        print "YOYOYOYOYOYOYO"
         self.correct_orientation()
         sized_image = self._image.resize((width, height), Image.ANTIALIAS)
         if save_path:
