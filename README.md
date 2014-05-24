@@ -11,4 +11,4 @@ INSTALLED_APPS = (
     'noodles',
 )
 ```
-The pieces that noodles offers are explained in the (Documentation)[http://brant.github.io/django-noodles/]
+The pieces that noodles offers are explained in the [Documentation](http://brant.github.io/django-noodles/)
