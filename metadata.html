@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<title>Website Metadata | Noodles for Django by Brant</title>
+
+		<link rel="stylesheet" href="stylesheets/styles.css">
+		<link rel="stylesheet" href="stylesheets/pygment_trac.css">
+		<script src="javascripts/scale.fix.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="wrapper">
+			<header>
+				<h1 class="header"><a href="index.html">Noodles for Django</a></h1>
+				<p class="header">Half-baked noodles of ideas for little bits of Django functionality</p>
+
+				<ul>
+					<li><a class="buttons github" href="https://github.com/Brant/django-noodles">View On GitHub</a></li>
+					<li class="download"><a class="buttons" href="https://github.com/Brant/django-noodles/zipball/master">Download ZIP</a></li>
+					<li class="download"><a class="buttons" href="https://github.com/Brant/django-noodles/tarball/master">Download TAR</a></li>
+				</ul>
+
+				<p class="header">This project is maintained by <a class="header name" href="https://github.com/Brant">Brant</a></p>
+
+
+			</header>
+
+			<section>
+      	<ul class="nav">
+      		<li><a href="index.html">Intro &amp; Installation</a></li>
+	        	<li><a href="models.html">Abstract Models</a></li>
+	        	<li><a href="assets.html">Assets from Images</a></li>
+	        	<li><a href="contact.html">Contact Submissions</a></li>
+	        	<li><a href="metadata.html">Site Metadata</a></li>
+			</ul>
+
+
+<h1>
+<a name="website-metadata" class="anchor" href="#website-metadata"><span class="octicon octicon-link"></span></a>Website Metadata</h1>
+
+<p>Website metadata consists of key/value pairs that can be used in templates. After a syncdb with noodles installed, this will be available in the admin interface.</p>
+
+<p>You'll need to add noodles.context_processors.site_meta to your context processors.</p>
+
+<div class="highlight highlight-python"><pre><span class="n">TEMPLATE_CONTEXT_PROCESSORS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="o">...</span>
+    <span class="s">'noodles.context_processors.site_meta'</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+<p>For example, perhaps you don't want to hardcode something like a user's Twitter URL into your templates. Instead, you could assign a key/value pair (through the admin interface) like this:</p>
+
+<pre><code>key: MY_TWITTER
+value: http://twitter.com/someuser
+</code></pre>
+
+<p>Then, in your templates, you can refer to it like this:</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"{{ SITE_META.MY_TWITTER }}"</span><span class="nt">&gt;</span>Follow me!<span class="nt">&lt;/a&gt;</span>
+</pre></div>
+
+
+			</section>
+			<footer>
+				<p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+			</footer>
+		</div>
+		<!--[if !IE]><script>fixScale(document);</script><![endif]-->
+
+	</body>
+</html>
