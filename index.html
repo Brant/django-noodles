@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Django-noodles by Brant</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Django-noodles</h1>
+        <p class="header">Half-baked noodles of ideas for little bits of functionality for Django</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/Brant/django-noodles/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/Brant/django-noodles/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/Brant/django-noodles">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/Brant">Brant</a></p>
+
+
+      </header>
+      <section>
+        <h1>
+<a name="django-noodles" class="anchor" href="#django-noodles"><span class="octicon octicon-link"></span></a>Django Noodles</h1>
+
+<p>Noodles is an app containing all sorts of misc. bits of code that I see to use across projects.</p>
+
+<p>There aren't really any connecting dots or common design patterns. It's just stuff I use.</p>
+
+<p>First, add noodles to your installed apps:</p>
+
+<div class="highlight highlight-python"><pre><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="o">...</span>
+    <span class="s">'noodles'</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+<p>The remaining documentation goes through individual noodles. Each is separate from the others - you can pick and choose which things to use.</p>
+
+<h2>
+<a name="abstract-models" class="anchor" href="#abstract-models"><span class="octicon octicon-link"></span></a>Abstract Models</h2>
+
+<p>Each abstract model is essentially named exactly to match the fields it will give you. For example, "TitleDateSlug" will give you title, date, and slug fields. </p>
+
+<p>Your models can just inherit from these models to save yourself some typing.</p>
+
+<h3>
+<a name="littleslugger" class="anchor" href="#littleslugger"><span class="octicon octicon-link"></span></a>LittleSlugger</h3>
+
+<p>LittleSlugger allows you to designate a field on your model to be "slugified". It provides some additional calculations to prevent conflicting slugs, so you can query reliably on the slug field.</p>
+
+<p>In order to implement, you need to create a method for your model named "get_slug_target". It should return the name of the field you want to slugify, as a string.</p>
+
+<div class="highlight highlight-python"><pre><span class="kn">from</span> <span class="nn">noodles.models</span> <span class="kn">import</span> <span class="n">LittleSlugger</span>
+
+<span class="k">class</span> <span class="nc">MySluggedModel</span><span class="p">(</span><span class="n">LittleSlugger</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_slug_target</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">"title"</span>      
+</pre></div>
+
+<p>Not adding the "get_slug_target" method to your model will raise NotImplementedError.</p>
+
+<p>Little Slugger will look for another object of the same model type with a matching slug. If it finds one, it will append a number (in sequence) to the end of the slug.</p>
+
+<p>For example, if you had an entry with a title of "A good day", it would have a slug of "a-good-day". If you then made <em>another</em> entry titled "A good day", it would end up with a slug of "a-good-day-1". If a third entry with the same title was created, it would become "a-good-day-2". This allows reliably querying on slugs, as if they would always be unique.</p>
+
+<p>Another default behavior of LittleSlugger is to keep the slug, once it has been established, even if the sluggified field should change. This allows, for example, title changes on blog posts without changing the URL of that post.</p>
+
+<p>For example, if you titled a post "A good days" and published it, you might have a URL of "<a href="http://myblog.com/a-good-days/">http://myblog.com/a-good-days/</a>". Realizing it should be titled "A good day", you would change the title. However, the slug would stay the same, keeping any pointers to the URL the same as well.</p>
+
+<p>To disable this behavior, you simply need to make a small addition to the "get_slug_target" method.</p>
+
+<div class="highlight highlight-python"><pre><span class="kn">from</span> <span class="nn">noodles.models</span> <span class="kn">import</span> <span class="n">LittleSlugger</span>
+
+<span class="k">class</span> <span class="nc">MySluggedModel</span><span class="p">(</span><span class="n">LittleSlugger</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_slug_target</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s">"title"</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>     
+</pre></div>
+
+<p>The second variable returned in the tuple designates whether or not the slug should "persist" through field changes.</p>
+
+<h3>
+<a name="activetoggler" class="anchor" href="#activetoggler"><span class="octicon octicon-link"></span></a>ActiveToggler</h3>
+
+<p>Active Toggler lets you toggle 1 entry of the model to be considered "active". Only 1 entry can be active at a time. </p>
+
+<p>Active Toggler adds an "active" attribute to your model. When an object of the model is saved (by calling .save()) and set to active=True, it will run through all other entries for the model and set them all to active=False.</p>
+
+<div class="highlight highlight-python"><pre><span class="kn">from</span> <span class="nn">noodles.models</span> <span class="kn">import</span> <span class="n">ActiveToggler</span>
+
+<span class="k">class</span> <span class="nc">FavoriteIcecream</span><span class="p">(</span><span class="n">ActiveToggler</span><span class="p">):</span>
+    <span class="sd">""" You can only have 1 favorite at a time """</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+
+<p>You could then use the model to query as if "active" was a unique field.</p>
+
+<div class="highlight highlight-python"><pre><span class="n">current_favorite_icecream</span> <span class="o">=</span> <span class="n">FavoriteIcecream</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+
+<h3>
+<a name="nameslug" class="anchor" href="#nameslug"><span class="octicon octicon-link"></span></a>NameSlug</h3>
+
+<p>NameSlug is a subclass of LittleSlugger, which has a "name" attribute. That name attribute is what the slug will be built from.</p>
+
+<h3>
+<a name="nameslugactive" class="anchor" href="#nameslugactive"><span class="octicon octicon-link"></span></a>NameSlugActive</h3>
+
+<p>NameSlugActive is a subclass of NameSlug (which is a subclass of LittleSlugger). In addition to a name and a slug of that name, there is an "active" attribute (BooleanField that defaults to True). </p>
+
+<p><strong>Note:</strong> The 'active' attribute is <em>not</em> a toggler (like ActiveToggler's active field).</p>
+
+<h3>
+<a name="titledateslug" class="anchor" href="#titledateslug"><span class="octicon octicon-link"></span></a>TitleDateSlug</h3>
+
+<p>TitleDateSlug is a subclass of LittleSlugger. It's attributes are 'title', 'date', and 'slug'. Slug is derived from the title. </p>
+
+<p>The date attribute could be used as something like a publish date. If left blank at save, it will auto populate to 5 days in the future.</p>
+
+<h2>
+<a name="website-metadata" class="anchor" href="#website-metadata"><span class="octicon octicon-link"></span></a>Website Metadata</h2>
+
+<p>Website metadata consists of key/value pairs that can be used in templates. After a syncdb with noodles installed, this will be available in the admin interface.</p>
+
+<p>You'll need to add noodles.context_processors.site_meta to your context processors.</p>
+
+<div class="highlight highlight-python"><pre><span class="n">TEMPLATE_CONTEXT_PROCESSORS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="o">...</span>
+    <span class="s">'noodles.context_processors.site_meta'</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+<p>For example, perhaps you don't want to hardcode something like a user's Twitter URL into your templates. Instead, you could assign a key/value pair (through the admin interface) like this:</p>
+
+<pre><code>key: MY_TWITTER
+value: http://twitter.com/someuser
+</code></pre>
+
+<p>Then, in your templates, you can refer to it like this:</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"{{ SITE_META.MY_TWITTER }}"</span><span class="nt">&gt;</span>Follow me!<span class="nt">&lt;/a&gt;</span>
+</pre></div>
+
+<h2>
+<a name="contact-submission" class="anchor" href="#contact-submission"><span class="octicon octicon-link"></span></a>Contact Submission</h2>
+
+<p>NOODLES_EMAIL_LIST = []</p>
+
+<h2>
+<a name="assets-from-image" class="anchor" href="#assets-from-image"><span class="octicon octicon-link"></span></a>Assets From Image</h2>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
