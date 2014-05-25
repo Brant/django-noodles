@@ -206,7 +206,7 @@ td {
 
 /* Wrapper */
 .wrapper {
-  width:960px;
+  max-width:960px;
 }
 
 
@@ -333,6 +333,28 @@ footer {
 	padding-left: 50px;
 }
 
+/* navigation between pages */
+.nav{
+	list-style: none;
+	margin:0;
+	padding:0;
+}
+.nav li{
+	display: inline-block;
+	margin:0 .8em;
+}
+.nav li:first-of-type{
+	margin:0 .8em 0 0;
+}
+.nav li:last-of-type{
+	margin:0 0 0 .8em;
+}
+.nav .cur{
+	text-decoration: underline;
+}
+
+
+
 @media print, screen and (max-width: 960px) {
 
   div.wrapper {
@@ -370,11 +392,25 @@ footer {
     right:130px;
     top:84px;
   }
+  .nav li,
+  .nav li:first-of-type,
+  .nav li:last-of-type{
+  	margin:.3em 0;
+  	width:30%;
+  	text-align: left;
+  }
 }
 
 @media print, screen and (max-width: 720px) {
   body {
     word-wrap:break-word;
+  }
+  .nav li,
+  .nav li:first-of-type,
+  .nav li:last-of-type{
+  	margin:.3em 0;
+  	width:40%;
+  	text-align: left;
   }
 
   header {
@@ -397,6 +433,14 @@ footer {
 }
 
 @media print, screen and (max-width: 480px) {
+
+	.nav li,
+  .nav li:first-of-type,
+  .nav li:last-of-type{
+  	margin:.3em 0;
+  	width:48%;
+  	text-align: left;
+  }
 
   header ul li.download {
     display:none;
