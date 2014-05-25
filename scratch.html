@@ -1,0 +1,8 @@
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">HalfQuarterAssetsMixin</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ImageField</span><span class="p">(</span><span class="n">upload_to</span><span class="o">=</span><span class="s">&quot;path/to/uploads&quot;</span><span class="p">)</span>
+
+<pre><span class="n">instance</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">instance</span><span class="o">.</span><span class="n">image_half</span><span class="o">.</span><span class="n">url</span></pre>
+
+<span class="p">{{</span> <span class="n">instance</span><span class="o">.</span><span class="n">image_half</span><span class="o">.</span><span class="n">url</span> <span class="p">}}</span>
+</pre></div>
