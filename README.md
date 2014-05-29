@@ -1,4 +1,4 @@
-Django Noodles
+Noodles for Django
 ==============
 Noodles is an app containing all sorts of misc. bits of code that I see to use across projects.
 
