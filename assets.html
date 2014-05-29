@@ -50,7 +50,7 @@
 <div class="highlight"><pre><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">HalfQuarterAssetsMixin</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">image</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ImageField</span><span class="p">(</span><span class="n">upload_to</span><span class="o">=</span><span class="s">&quot;path/to/uploads&quot;</span><span class="p">)</span>
 </pre></div>
-<p>That will automatically generate 2 assets per image field in the model. Those assets are then accessible using a simple attribute syntax added to instances of that model:</p>
+<p>That will automatically generate 2 assets per image field in the model - one at half of the original size and one at a quarter of the original size.. Those assets are then accessible using a simple attribute syntax added to instances of that model:</p>
 <div class="highlight"><pre><span class="n">instance</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">instance</span><span class="o">.</span><span class="n">image_half</span><span class="o">.</span><span class="n">url</span>
 <span class="n">instance</span><span class="o">.</span><span class="n">image_quarter</span><span class="o">.</span><span class="n">url</span></pre></div>
