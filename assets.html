@@ -62,7 +62,7 @@
 
 
 <h3>DefinedWidthsAssetsFromImagesMixin</h3>
-<p>If you want to specify the *width* of your assets while maintaining the aspect ratio, you can use the <strong>DefinedWidthsAssetsFromImagesMixin</strong>.</p>
+<p>If you want to specify the <em>width</em> of your assets while maintaining the aspect ratio, you can use the <strong>DefinedWidthsAssetsFromImagesMixin</strong>.</p>
 <p>You just add the mixin to your model, along with adding a method: <em>get_dimensions()</em>.</p>
 <div class="highlight"><pre><span class="k">class</span> <span class="n">MyModel</span><span class="p">(</span><span class="n">DefinedWidthsAssetsFromImagesMixin</span><span class="p">,</span> <span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">image</span> <span class="p">=</span> <span class="n">models</span><span class="p">.</span><span class="n">ImageField</span><span class="p">(</span><span class="n">upload_to</span><span class="p">=</span><span class="s">&quot;path/to/uploads&quot;</span><span class="p">)</span>
