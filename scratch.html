@@ -1,8 +1,22 @@
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">HalfQuarterAssetsMixin</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">image</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ImageField</span><span class="p">(</span><span class="n">upload_to</span><span class="o">=</span><span class="s">&quot;path/to/uploads&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span class="k">class</span> <span class="n">MyModel</span><span class="p">(</span><span class="n">DefinedWidthsAssetsFromImagesMixin</span><span class="p">,</span> <span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">image</span> <span class="p">=</span> <span class="n">models</span><span class="p">.</span><span class="n">ImageField</span><span class="p">(</span><span class="n">upload_to</span><span class="p">=</span><span class="s">&quot;path/to/uploads&quot;</span><span class="p">)</span>
 
-<pre><span class="n">instance</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">instance</span><span class="o">.</span><span class="n">image_half</span><span class="o">.</span><span class="n">url</span></pre>
+    <span class="n">def</span> <span class="n">get_dimensions</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="s">&quot;&quot;&quot; returns a list of desired widths &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span>
 
-<span class="p">{{</span> <span class="n">instance</span><span class="o">.</span><span class="n">image_half</span><span class="o">.</span><span class="n">url</span> <span class="p">}}</span>
+    <span class="n">def</span> <span class="n">get_quality</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="s">&quot;&quot;&quot; returns quality argument for jpegs </span>
+<span class="s">        defaults to 75 &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">100</span>
+
+
+<span class="n">instance</span> <span class="p">=</span> <span class="n">MyModel</span><span class="p">.</span><span class="n">objects</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="p">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">instance</span><span class="p">.</span><span class="n">image_400</span><span class="p">.</span><span class="n">url</span>
+<span class="n">instance</span><span class="p">.</span><span class="n">image_600</span><span class="p">.</span><span class="n">url</span>
+<span class="n">instance</span><span class="p">.</span><span class="n">image_1000</span><span class="p">.</span><span class="n">url</span>
+
+<span class="p">{{</span> <span class="n">instance</span><span class="p">.</span><span class="n">image_400</span><span class="p">.</span><span class="n">url</span> <span class="p">}}</span>
+<span class="p">{{</span> <span class="n">instance</span><span class="p">.</span><span class="n">image_600</span><span class="p">.</span><span class="n">url</span> <span class="p">}}</span>
+<span class="p">{{</span> <span class="n">instance</span><span class="p">.</span><span class="n">image_1000</span><span class="p">.</span><span class="n">url</span> <span class="p">}}</span>
 </pre></div>

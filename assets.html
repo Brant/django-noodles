@@ -45,6 +45,7 @@
 
 <h2>Easy, Out-of-the-Box Mixins (for Convenience)</h2>
 <p>There is a base mixin that allows for further customization, but there are two implementations of that base mixin which allow the mixins to be much more quickly attached to your models.</p>
+
 <h3>HalfQuarterAssetsMixin</h3>
 <p>Probably the fastest way to start generating multiple assets from your ImageField fields is to just add the "HalfQuarterAssetsMixin" to your model definition.</p>
 <div class="highlight"><pre><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">HalfQuarterAssetsMixin</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
@@ -59,6 +60,41 @@
 <div class="highlight"><pre><span class="p">{{</span> <span class="n">instance</span><span class="o">.</span><span class="n">image_half</span><span class="o">.</span><span class="n">url</span> <span class="p">}}</span>
 <span class="p">{{</span> <span class="n">instance</span><span class="o">.</span><span class="n">image_quarter</span><span class="o">.</span><span class="n">url</span> <span class="p">}}</span></pre></div>
 
+
+<h3>DefinedWidthsAssetsFromImagesMixin</h3>
+<p>If you want to specify the *width* of your assets while maintaining the aspect ratio, you can use the <strong>DefinedWidthsAssetsFromImagesMixin</strong>.</p>
+<p>You just add the mixin to your model, along with adding a method: <em>get_dimensions()</em>.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="n">MyModel</span><span class="p">(</span><span class="n">DefinedWidthsAssetsFromImagesMixin</span><span class="p">,</span> <span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">image</span> <span class="p">=</span> <span class="n">models</span><span class="p">.</span><span class="n">ImageField</span><span class="p">(</span><span class="n">upload_to</span><span class="p">=</span><span class="s">&quot;path/to/uploads&quot;</span><span class="p">)</span>
+
+    <span class="n">def</span> <span class="n">get_dimensions</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="s">&quot;&quot;&quot; returns a list of desired widths &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span></pre></div>
+<p>The above configuration will create 3 assets automatically when instances of the model are saved; one with a width of 400px, one at 600px, and one at 1000px.</p>
+<p>Those generated assets are then accessable using dynamically added attribues of the model:</p>
+<div class="highlight"><pre><span class="n">instance</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">instance</span><span class="o">.</span><span class="n">image_400</span><span class="o">.</span><span class="n">url</span>
+<span class="n">instance</span><span class="o">.</span><span class="n">image_600</span><span class="o">.</span><span class="n">url</span>
+<span class="n">instance</span><span class="o">.</span><span class="n">image_1000</span><span class="o">.</span><span class="n">url</span></pre></div>
+
+
+<p>Or, in templates:</p>
+<div class="highlight"><pre><span class="p">{{</span> <span class="n">instance</span><span class="o">.</span><span class="n">image_400</span><span class="o">.</span><span class="n">url</span> <span class="p">}}</span>
+<span class="p">{{</span> <span class="n">instance</span><span class="o">.</span><span class="n">image_600</span><span class="o">.</span><span class="n">url</span> <span class="p">}}</span>
+<span class="p">{{</span> <span class="n">instance</span><span class="o">.</span><span class="n">image_1000</span><span class="o">.</span><span class="n">url</span> <span class="p">}}</span></pre></div>
+<p>With the <strong>DefinedWidthsAssetsFromImagesMixin</strong> you can also optionally add another method to your model: <em>get_quality()</em> which returns the quality (0-100) that JPEG assets will be saved at. Defaults to 75.</p>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="n">MyModel</span><span class="p">(</span><span class="n">DefinedWidthsAssetsFromImagesMixin</span><span class="p">,</span> <span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">image</span> <span class="p">=</span> <span class="n">models</span><span class="p">.</span><span class="n">ImageField</span><span class="p">(</span><span class="n">upload_to</span><span class="p">=</span><span class="s">&quot;path/to/uploads&quot;</span><span class="p">)</span>
+
+    <span class="n">def</span> <span class="n">get_dimensions</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="s">&quot;&quot;&quot; returns a list of desired widths &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span>
+
+    <span class="n">def</span> <span class="n">get_quality</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="s">&quot;&quot;&quot; returns quality argument for jpegs </span>
+<span class="s">        defaults to 75 &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">100</span></pre></div>
 
 			</section>
 			<footer>
