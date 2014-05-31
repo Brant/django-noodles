@@ -11,13 +11,13 @@ setup(
 
     author = 'Brant Steen',
     author_email = 'brant.steen@gmail.com',
-    
+
     packages = find_packages(exclude=('noodles_tests', )),
     include_package_data = True,
     zip_safe = False,
-    
 
-    install_requires = ['setuptools', 'django'],
+
+    install_requires = ['django', ],
 
     classifiers = [
         'Development Status :: 2 - Pre-Alpha',
