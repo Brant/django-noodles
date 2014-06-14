@@ -4,6 +4,7 @@ Noodles is an app containing all sorts of misc. bits of code that I see to use a
 
 There aren't really any connecting dots or common design patterns. It's just stuff I use.
 
+## Quickstart
 First, install with pip (for the time being, noodles is only available directly from github):
 ```
 pip install git+https://github.com/Brant/django-noodles.git@master
