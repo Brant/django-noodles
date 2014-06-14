@@ -125,18 +125,21 @@ class AssetsFromImageHandler(object):
             if ExifTags.TAGS[orientation] == 'Orientation':
                 break
 
-        if hasattr(self._image, '_getexif'): # only present in JPEGs
-            e = self._image._getexif()       # returns None if no EXIF data
+        if hasattr(self._image, '_getexif'):  # only present in JPEGs
+            e = self._image._getexif()        # returns None if no EXIF data
             if e is not None:
                 exif = dict(e.items())
 
                 try:
                     orientation = exif[orientation]
 
-                    if orientation == 3:   self._image = self._image.transpose(Image.ROTATE_180)
-                    elif orientation == 6: self._image = self._image.transpose(Image.ROTATE_270)
-                    elif orientation == 8: self._image = self._image.transpose(Image.ROTATE_90)
-                except KeyError: # images with messed up metadata (TAGS)
+                    if orientation == 3:
+                        self._image = self._image.transpose(Image.ROTATE_180)
+                    elif orientation == 6:
+                        self._image = self._image.transpose(Image.ROTATE_270)
+                    elif orientation == 8:
+                        self._image = self._image.transpose(Image.ROTATE_90)
+                except KeyError:  # images with messed up metadata (TAGS)
                     pass
 
     def create_width(self, width, save_path=None):
@@ -161,4 +164,3 @@ class AssetsFromImageHandler(object):
         if not os.path.isdir(image_path):
             os.makedirs(image_path)
         image.save(save_path, quality=self._quality)
-
