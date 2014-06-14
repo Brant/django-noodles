@@ -9,6 +9,14 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.conf import settings
 
 
+def has_changed(instance, field):
+    """ check if a field has changed on a particular instance """
+    if not instance.pk:
+        return True
+    old_value = instance.__class__._default_manager.filter(pk=instance.pk).values(field).get()[field]
+    return not getattr(instance, field) == old_value
+
+
 class AssetFromImage:
     """
     Represents an asset produced from ImageFields by models.AssetsFromImagesMixin

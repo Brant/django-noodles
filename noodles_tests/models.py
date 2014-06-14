@@ -2,6 +2,7 @@
 Concrete models for test cases
 """
 from django.db import models
+
 from noodles.models import TitleDateSlug, ActiveToggler, LittleSlugger, NameSlug, HalfQuarterAssetsMixin
 
 
@@ -28,7 +29,7 @@ class BadLittleSluggerConcrete(LittleSlugger):
 
 class LittleSluggerConcrete(LittleSlugger):
     slug_target = models.CharField(max_length=300)
-    
+
     def get_slug_target(self):
         """
         Point at our 'slug_target'
@@ -38,7 +39,7 @@ class LittleSluggerConcrete(LittleSlugger):
 
 class LittleSluggerConcreteNoPersist(LittleSlugger):
     slug_target = models.CharField(max_length=300)
-    
+
     def get_slug_target(self):
         """
         Point at our 'slug_target'
