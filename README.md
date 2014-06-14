@@ -17,3 +17,13 @@ INSTALLED_APPS = (
 )
 ```
 The pieces that noodles offers are explained in the [Documentation](http://brant.github.io/django-noodles/)
+
+
+## Tests
+To run the the test suite:
+```
+virtualenv env
+. ./env/bin/activate
+pip install -r noodles_tests/requirements.txt
+./noodles_tests/runtests.py
+```

@@ -1,8 +1,9 @@
 """
 Utilites
 """
-import Image, os
-import ExifTags
+import os
+
+from PIL import Image, ExifTags
 
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.conf import settings
