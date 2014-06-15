@@ -70,11 +70,11 @@ class DefinedWidthsAssetsFromImagesMixin(AssetsFromImagesMixin):
 
     def save(self, *args, **kwargs):
         super(DefinedWidthsAssetsFromImagesMixin, self).save(*args, **kwargs)
-        asset_handler = ModelAssetsFromImageHandler(self, self.get_quality())
+        model_asset_handler = ModelAssetsFromImageHandler(self, self.get_quality())
 
         my_dict = {}
-        for the_handler in asset_handler._asset_handlers:
-            image_field = asset_handler._asset_handlers[the_handler]
+        for the_handler in model_asset_handler._asset_handlers:
+            image_field = model_asset_handler._asset_handlers[the_handler]
 
             for width in self.get_dimensions():
                 save_path = os.path.join(settings.MEDIA_ROOT, image_field["path"], str(width), image_field["filename"])
@@ -98,11 +98,11 @@ class HalfQuarterAssetsMixin(AssetsFromImagesMixin):
         custom save for asset creation
         """
         super(HalfQuarterAssetsMixin, self).save(*args, **kwargs)
-        asset_handler = ModelAssetsFromImageHandler(self)
+        model_asset_handler = ModelAssetsFromImageHandler(self)
 
         my_dict = {}
-        for the_handler in asset_handler._asset_handlers:
-            image_field = asset_handler._asset_handlers[the_handler]
+        for the_handler in model_asset_handler._asset_handlers:
+            image_field = model_asset_handler._asset_handlers[the_handler]
 
             save_path = os.path.join(settings.MEDIA_ROOT, image_field["path"], "half", image_field["filename"])
             image_field["handler"].create_width(image_field["handler"].original_w / 2, save_path)
