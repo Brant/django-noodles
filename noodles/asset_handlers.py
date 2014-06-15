@@ -43,5 +43,3 @@ class ModelAssetsFromImageHandler:
 
         self.image_fields = image_fields
         self._model_obj = model_obj
-
-
