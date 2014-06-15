@@ -1,6 +1,7 @@
 """
 Noodles Tests
 """
+import time
 import os
 import shutil
 
@@ -48,6 +49,9 @@ class HalfQuarterTestcase(TestCase):
         self.image_path = os.path.join(self.path, "happy.png")
         shutil.copy(self.image_path, os.path.join(self.save_dir, "happy.png"))
 
+        self.image_path_2 = os.path.join(self.path, "ella.png")
+        shutil.copy(self.image_path, os.path.join(self.save_dir, "ella.png"))
+
     def tearDown(self):
         """
         Delete directories
@@ -71,6 +75,41 @@ class HalfQuarterTestcase(TestCase):
 
         self.assertEquals(half_quarter.some_image_quarter.url, "/media/images/quarter/happy.png")
         self.assertEquals(half_quarter.some_image_half.url, "/media/images/half/happy.png")
+
+    @override_settings(MEDIA_ROOT=os.path.join(this_dir, "tmp"))
+    def test_query_count(self):
+        """
+        We don't want to add extra queries if unnecessary
+        """
+        half_quarter = HalfQuarterAssetsConcrete(some_image="images/happy.png")
+        with self.assertNumQueries(2):
+            half_quarter.save()
+
+        with self.assertNumQueries(1):
+            half_quarter.save()
+
+        with self.assertNumQueries(2):
+            half_quarter.some_image = "images/ella.png"
+            half_quarter.save()
+
+        with self.assertNumQueries(1):
+            half_quarter.save()
+
+    @override_settings(MEDIA_ROOT=os.path.join(this_dir, "tmp"))
+    def test_file_saving(self):
+        """
+        We don't want to re-create assets when unnecessary
+        """
+        half_quarter = HalfQuarterAssetsConcrete(some_image="images/happy.png")
+        half_quarter.save()
+
+        half_fullpath = os.path.join(self.save_dir, "half", "happy.png")
+        original_time = os.path.getctime(half_fullpath)
+
+        time.sleep(2)
+        half_quarter.save()
+
+        self.assertEquals(os.path.getctime(half_fullpath), original_time)
 
 
 class AssetFromImageTestCase(TestCase):
