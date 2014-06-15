@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-import os
 import sys
 
 from django.conf import settings
+
 
 if not settings.configured:
     settings.configure(
@@ -17,12 +17,12 @@ if not settings.configured:
             'django.contrib.sites',
             'django_nose'
         ],
-        SITE_ID = 1,
-        STATIC_URL = '/static/',
-        MEDIA_URL = '/media/',
-        ROOT_URLCONF = 'noodles_tests.urls',
-        NOSE_ARGS = ["--with-xcoverage", "--cover-inclusive", "--with-xunit", "--exe", "--verbosity=3", "--cover-package=noodles"],
-        NOSE_PLUGINS = [
+        SITE_ID=1,
+        STATIC_URL='/static/',
+        MEDIA_URL='/media/',
+        ROOT_URLCONF='noodles_tests.urls',
+        NOSE_ARGS=["--with-xcoverage", "--cover-inclusive", "--with-xunit", "--exe", "--verbosity=3", "--cover-package=noodles"],
+        NOSE_PLUGINS=[
             'nosexcover.XCoverage',
             "nose_exclude.NoseExclude"
         ],
@@ -32,6 +32,7 @@ if not settings.configured:
 from django.test.simple import DjangoTestSuiteRunner
 from django_nose.runner import NoseTestSuiteRunner
 
+
 def runtests():
     runner = DjangoTestSuiteRunner()
     runner = NoseTestSuiteRunner()
@@ -40,4 +41,3 @@ def runtests():
 
 if __name__ == '__main__':
     runtests(*sys.argv[1:])
-
