@@ -30,12 +30,16 @@ class AssetsFromImagesMixin(models.Model):
         super(AssetsFromImagesMixin, self).__init__(*args, **kwargs)
         self._assign_mixin_attrs()
 
+    def _get_asset_dict(self):
+        my_dict = ast.literal_eval(str(self.assets_from_images))
+        if isinstance(my_dict, dict):
+            return my_dict
+        return {}
+
     def _assign_mixin_attrs(self):
         if self.assets_from_images:
-            my_dict = ast.literal_eval(str(self.assets_from_images))
-            if isinstance(my_dict, dict):
-                for item in my_dict:
-                    setattr(self, "%s" % item, AssetFromImage(my_dict[item]))
+            for item, value in self._get_asset_dict().items():
+                setattr(self, "%s" % item, AssetFromImage(value))
 
     assets_from_images = models.TextField(blank=True, null=True, editable=False)
 
@@ -45,6 +49,10 @@ class AssetsFromImagesMixin(models.Model):
         """
         super(AssetsFromImagesMixin, self).save(*args, **kwargs)
         self._assign_mixin_attrs()
+
+    def get_asset_paths(self):
+        """ returns a list of asset paths (inserted between normal path and file name) """
+        raise NotImplementedError("Subclasses of 'AssetsFromImagesMixin' must define a 'get_asset_path' method")
 
     class Meta:
         """
@@ -68,6 +76,9 @@ class DefinedWidthsAssetsFromImagesMixin(AssetsFromImagesMixin):
         """ should return a list """
         raise NotImplementedError("You must define the get_dimensions() method")
 
+    def get_asset_paths(self):
+        return [str(item) for item in self.get_dimensions()]
+
     def save(self, *args, **kwargs):
         super(DefinedWidthsAssetsFromImagesMixin, self).save(*args, **kwargs)
         model_asset_handler = ModelAssetsFromImageHandler(self, self.get_quality())
@@ -78,14 +89,21 @@ class DefinedWidthsAssetsFromImagesMixin(AssetsFromImagesMixin):
 
             for width in self.get_dimensions():
                 save_path = os.path.join(settings.MEDIA_ROOT, image_field["path"], str(width), image_field["filename"])
-                image_field["handler"].create_width(width, save_path)
+
+                if not os.path.isfile(save_path):
+                    image_field["handler"].create_width(width, save_path)
+
                 this_value = "/" . join([(image_field["path"].lstrip("/").rstrip("/")), str(width), image_field["filename"]])
                 this_value = this_value.replace("\\", "/")
 
                 my_dict.update({"%s_%s" % (the_handler, str(width)): this_value})
 
-        self.assets_from_images = my_dict
-        super(DefinedWidthsAssetsFromImagesMixin, self).save(*args, **kwargs)
+        if not my_dict:
+            my_dict = None
+
+        if my_dict != self._get_asset_dict():
+            self.assets_from_images = my_dict
+            super(DefinedWidthsAssetsFromImagesMixin, self).save(*args, **kwargs)
 
 
 class HalfQuarterAssetsMixin(AssetsFromImagesMixin):
@@ -101,25 +119,37 @@ class HalfQuarterAssetsMixin(AssetsFromImagesMixin):
         model_asset_handler = ModelAssetsFromImageHandler(self)
 
         my_dict = {}
+
         for the_handler in model_asset_handler._asset_handlers:
             image_field = model_asset_handler._asset_handlers[the_handler]
 
             save_path = os.path.join(settings.MEDIA_ROOT, image_field["path"], "half", image_field["filename"])
-            image_field["handler"].create_width(image_field["handler"].original_w / 2, save_path)
+            if not os.path.isfile(save_path):
+                image_field["handler"].create_width(image_field["handler"].original_w / 2, save_path)
             half_value = "/".join([(image_field["path"].lstrip("/").rstrip("/")), "half", image_field["filename"]])
 
             save_path = os.path.join(settings.MEDIA_ROOT, image_field["path"], "quarter", image_field["filename"])
-            image_field["handler"].create_width(image_field["handler"].original_w / 4, save_path)
+            if not os.path.isfile(save_path):
+                image_field["handler"].create_width(image_field["handler"].original_w / 4, save_path)
             quarter_value = "/".join([(image_field["path"].lstrip("/").rstrip("/")), "quarter", image_field["filename"]])
 
             quarter_value = quarter_value.replace("\\", "/")
             half_value = half_value.replace("\\", "/")
 
-            my_dict.update({"%s_half" % the_handler: half_value, "%s_quarter" % the_handler: quarter_value})
+            my_dict.update({
+                "%s_half" % the_handler: half_value,
+                "%s_quarter" % the_handler: quarter_value
+            })
 
-        self.assets_from_images = my_dict
+        if not my_dict:
+            my_dict = None
 
-        super(HalfQuarterAssetsMixin, self).save(*args, **kwargs)
+        if my_dict != self._get_asset_dict():
+            self.assets_from_images = my_dict
+            super(HalfQuarterAssetsMixin, self).save(*args, **kwargs)
+
+    def get_asset_paths(self):
+        return ["half", "quarter", ]
 
     class Meta:
         """

@@ -3,14 +3,24 @@ Concrete models for test cases
 """
 from django.db import models
 
-from noodles.models import TitleDateSlug, ActiveToggler, LittleSlugger, NameSlug, HalfQuarterAssetsMixin
+from noodles.models import TitleDateSlug, ActiveToggler, LittleSlugger, NameSlug, HalfQuarterAssetsMixin, DefinedWidthsAssetsFromImagesMixin
+
+
+class DefinedWidthAssetsConcrete(DefinedWidthsAssetsFromImagesMixin, models.Model):
+    """
+    Implenetation with an image field
+    """
+    some_image = models.ImageField(upload_to="images", null=True, blank=True)
+
+    def get_dimensions(self):
+        return [100, 200]
 
 
 class HalfQuarterAssetsConcrete(HalfQuarterAssetsMixin, models.Model):
     """
     Implenetation with an image field
     """
-    some_image = models.ImageField(upload_to="images")
+    some_image = models.ImageField(upload_to="images", null=True, blank=True)
 
 
 class NameSlugConcrete(NameSlug):

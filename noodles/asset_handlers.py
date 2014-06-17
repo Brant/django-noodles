@@ -34,12 +34,21 @@ class ModelAssetsFromImageHandler:
                 if tmp.endswith(filename):
                     tmp = tmp[0:len(tmp) - len(filename)]
 
+                file_dir = tmp
+
                 if tmp.startswith(settings.MEDIA_ROOT):
                     tmp = tmp[len(settings.MEDIA_ROOT)+1:-1]
 
                 filepath = tmp
 
-                self._asset_handlers.update({image_field: {"handler": AssetsFromImageHandler(file_fullpath, quality), "path": filepath, "filename": filename}})
+                self._asset_handlers.update({
+                    image_field: {
+                        "handler": AssetsFromImageHandler(file_fullpath, quality),
+                        "path": filepath,
+                        "filename": filename,
+                        "original_directory": file_dir,
+                    }
+                })
 
         self.image_fields = image_fields
         self._model_obj = model_obj

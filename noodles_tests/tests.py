@@ -21,7 +21,7 @@ from noodles_tests.models import (
     NameSlugConcrete, ActiveTogglerConcrete,
     TitleDateSlugConcrete, LittleSluggerConcrete,
     BadLittleSluggerConcrete, LittleSluggerConcreteNoPersist,
-    HalfQuarterAssetsConcrete
+    HalfQuarterAssetsConcrete, DefinedWidthAssetsConcrete
 )
 
 from noodles import util
@@ -32,10 +32,12 @@ from noodles_tests.util import FakeRequest
 this_dir = os.path.dirname(os.path.abspath(__file__))
 
 
-class HalfQuarterTestcase(TestCase):
+class ModelMixinTestCase:
     """
     Test implementation of Half/Quarter assets mixin
     """
+    mixin_class = None
+
     def setUp(self):
         """
         Set some initial things up
@@ -52,6 +54,9 @@ class HalfQuarterTestcase(TestCase):
         self.image_path_2 = os.path.join(self.path, "ella.png")
         shutil.copy(self.image_path, os.path.join(self.save_dir, "ella.png"))
 
+        if not self.mixin_class:
+            raise NotImplementedError("Need to define a mixin class for ModelMixinTestCase")
+
     def tearDown(self):
         """
         Delete directories
@@ -60,56 +65,81 @@ class HalfQuarterTestcase(TestCase):
             shutil.rmtree(os.path.join(this_dir, "tmp"))
 
     @override_settings(MEDIA_ROOT=os.path.join(this_dir, "tmp"))
-    def test_saving_assets(self):
+    def test_null_blank(self):
         """
-        See if we can save some assets
+        There shouldn't be any errors if there is nothing being saved
+
+        Also, 'assets_from_images' field should be NULL
         """
-        half_quarter = HalfQuarterAssetsConcrete(some_image="images/happy.png")
-        half_quarter.save()
+        obj = self.mixin_class()
+        obj.save()
+        self.assertEquals(obj.assets_from_images, None)
 
-        self.assertEquals(str(half_quarter.some_image_half), "images/half/happy.png")
-        self.assertEquals(str(half_quarter.some_image_quarter), "images/quarter/happy.png")
-
-        self.assertEquals(unicode(half_quarter.some_image_half), "images/half/happy.png")
-        self.assertEquals(unicode(half_quarter.some_image_quarter), "images/quarter/happy.png")
-
-        self.assertEquals(half_quarter.some_image_quarter.url, "/media/images/quarter/happy.png")
-        self.assertEquals(half_quarter.some_image_half.url, "/media/images/half/happy.png")
+        obj = self.mixin_class(some_image="images/happy.png")
+        obj.save()
+        obj.some_image = None
+        obj.save()
+        self.assertEquals(obj.assets_from_images, None)
 
     @override_settings(MEDIA_ROOT=os.path.join(this_dir, "tmp"))
     def test_query_count(self):
         """
         We don't want to add extra queries if unnecessary
         """
-        half_quarter = HalfQuarterAssetsConcrete(some_image="images/happy.png")
+        obj = self.mixin_class(some_image="images/happy.png")
         with self.assertNumQueries(2):
-            half_quarter.save()
+            obj.save()
 
         with self.assertNumQueries(1):
-            half_quarter.save()
+            obj.save()
 
         with self.assertNumQueries(2):
-            half_quarter.some_image = "images/ella.png"
-            half_quarter.save()
+            obj.some_image = "images/ella.png"
+            obj.save()
 
         with self.assertNumQueries(1):
-            half_quarter.save()
+            obj.save()
 
     @override_settings(MEDIA_ROOT=os.path.join(this_dir, "tmp"))
-    def test_file_saving(self):
+    def test_asset_generation(self):
         """
         We don't want to re-create assets when unnecessary
         """
-        half_quarter = HalfQuarterAssetsConcrete(some_image="images/happy.png")
-        half_quarter.save()
+        obj = self.mixin_class(some_image="images/happy.png")
+        obj.save()
 
-        half_fullpath = os.path.join(self.save_dir, "half", "happy.png")
-        original_time = os.path.getctime(half_fullpath)
+        for sub in obj.get_asset_paths():
+            test_path = os.path.join(self.save_dir, sub, "happy.png")
+            original_time = os.path.getctime(test_path)
 
-        time.sleep(2)
-        half_quarter.save()
+            time.sleep(2)
+            obj.save()
 
-        self.assertEquals(os.path.getctime(half_fullpath), original_time)
+            self.assertEquals(os.path.getctime(test_path), original_time)
+
+    @override_settings(MEDIA_ROOT=os.path.join(this_dir, "tmp"))
+    def test_saving_assets(self):
+        """
+        See if we can save some assets
+        """
+        obj = self.mixin_class(some_image="images/happy.png")
+        obj.save()
+
+        for sub in obj.get_asset_paths():
+            self.assertEquals(str(getattr(obj, "some_image_%s" % sub)), "images/%s/happy.png" % sub)
+            self.assertEquals(unicode(getattr(obj, "some_image_%s" % sub)), "images/%s/happy.png" % sub)
+            self.assertEquals(getattr(obj, "some_image_%s" % sub).url, "/media/images/%s/happy.png" % sub)
+
+
+class DefinedWidthTestCase(ModelMixinTestCase, TestCase):
+    mixin_class = DefinedWidthAssetsConcrete
+
+
+class HalfQuarterTestCase(ModelMixinTestCase, TestCase):
+    """
+    Test implementation of Half/Quarter assets mixin
+    """
+    mixin_class = HalfQuarterAssetsConcrete
 
 
 class AssetFromImageTestCase(TestCase):
