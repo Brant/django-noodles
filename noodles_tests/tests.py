@@ -26,7 +26,7 @@ from noodles_tests.models import (
 
 from noodles import util
 from noodles.util import AssetsFromImageHandler, has_changed
-from noodles_tests.util import FakeRequest
+from noodles_tests.util import FakeRequest, write_to_file
 
 
 this_dir = os.path.dirname(os.path.abspath(__file__))

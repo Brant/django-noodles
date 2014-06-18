@@ -5,3 +5,9 @@ class FakeRequest(object):
     """
     def __init__(self, path):
         self.path = unicode(path)
+
+
+def write_to_file(filename, content):
+    with open(filename, 'a') as f:
+        f.write(content)
+        f.write("\n")
