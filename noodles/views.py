@@ -1,12 +1,24 @@
 """
 NOODLE VIEWS!!!
 """
+import json
+
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 
 from noodles.forms import ContactForm
+
+
+def json_response(request, response_data=None, content_type="application/json"):
+    """
+    shortcut function for returing a json response
+    """
+    if not response_data:
+        response_data = {}
+
+    return HttpResponse(json.dumps(response_data), content_type=content_type)
 
 
 def contact(request, template_name="noodles/contact.html"):
