@@ -64,6 +64,21 @@ class ModelMixinTestCase:
         if os.path.isdir(os.path.join(this_dir, "tmp")):
             shutil.rmtree(os.path.join(this_dir, "tmp"))
 
+    def test_save_nonexistant_file(self):
+        """
+        If a model is being saved where the file of the image does not exist
+
+        It shouldn't error - it should fail silently
+        This is to prevent problems during data loads
+        """
+        obj = self.mixin_class()
+        obj.save()
+        self.assertEquals(obj.assets_from_images, None)
+
+        obj = self.mixin_class(some_image="images/happy.png")
+        obj.save()
+        self.assertEquals(obj.assets_from_images, None)
+
     @override_settings(MEDIA_ROOT=os.path.join(this_dir, "tmp"))
     def test_null_blank(self):
         """

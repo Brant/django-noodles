@@ -24,6 +24,8 @@ class ModelAssetsFromImageHandler:
                 filename = os.path.basename(getattr(model_obj, image_field).file.name)
             except ValueError:  # no image
                 filename = None
+            except IOError:     # image doesn't exist on disk
+                filename = None
 
             if filename:
                 obj_attr = getattr(model_obj, image_field)
