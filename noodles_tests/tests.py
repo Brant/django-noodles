@@ -66,7 +66,7 @@ class ModelMixinTestCase:
 
     def test_save_nonexistant_file(self):
         """
-        If a model is being saved where the file of the image does not exist
+        No errors on model save where image doesn't exist on disk
 
         It shouldn't error - it should fail silently
         This is to prevent problems during data loads
@@ -78,6 +78,20 @@ class ModelMixinTestCase:
         obj = self.mixin_class(some_image="images/happy.png")
         obj.save()
         self.assertEquals(obj.assets_from_images, None)
+
+    def test_strict_errors_for_dynamic_attributes(self):
+        """
+        Raise AttributeError attempting to access an unknown image from the image_dimension API
+        """
+        obj = self.mixin_class()
+        obj.save()
+        self.assertEquals(obj.assets_from_images, None)
+
+        with self.assertRaises(AttributeError):
+            obj.some_image_100
+
+        with self.assertRaises(AttributeError):
+            obj.some_image_100.url
 
     @override_settings(MEDIA_ROOT=os.path.join(this_dir, "tmp"))
     def test_null_blank(self):
