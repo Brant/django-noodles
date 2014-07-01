@@ -57,11 +57,13 @@ class ModelMixinTestCase:
         if not self.mixin_class:
             raise NotImplementedError("Need to define a mixin class for ModelMixinTestCase")
 
-    def test_model_create(self):
+    def test_model_object_creattion(self):
         """
-        Test direct model creation using Model.objects.create
+        Test various ways of spinning up model objects
         """
-        obj = self.mixin_class.objects.create()
+        obj = self.mixin_class.objects.create(some_image="images/happy.png")
+        obj_2 = self.mixin_class(some_image="images/happy.png")
+        obj_2.save()
 
     def tearDown(self):
         """
