@@ -47,6 +47,12 @@ class AssetsFromImagesMixin(models.Model):
         """
         Assign attributes after save
         """
+
+        # Since this is used as a mixin only,
+        # we shouldn't be force inserting anything
+        if 'force_insert' in kwargs:
+            kwargs['force_insert'] = False
+
         super(AssetsFromImagesMixin, self).save(*args, **kwargs)
         self._assign_mixin_attrs()
 

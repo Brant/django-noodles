@@ -57,6 +57,12 @@ class ModelMixinTestCase:
         if not self.mixin_class:
             raise NotImplementedError("Need to define a mixin class for ModelMixinTestCase")
 
+    def test_model_create(self):
+        """
+        Test direct model creation using Model.objects.create
+        """
+        obj = self.mixin_class.objects.create()
+
     def tearDown(self):
         """
         Delete directories
