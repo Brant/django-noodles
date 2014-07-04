@@ -38,8 +38,12 @@ class ModelAssetsFromImageHandler:
 
                 file_dir = tmp
 
-                if tmp.startswith(settings.MEDIA_ROOT):
-                    tmp = tmp[len(settings.MEDIA_ROOT)+1:-1]
+                media_root = settings.MEDIA_ROOT
+                if media_root.endswith(os.sep):
+                    media_root = media_root[:-1]
+
+                if tmp.startswith(media_root):
+                    tmp = tmp[len(media_root)+1:-1]
 
                 filepath = tmp
 
