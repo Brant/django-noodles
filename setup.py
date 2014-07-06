@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "django-noodles",
-    version = "0.2.3",
+    version = "0.2.4",
     url = 'http://github.com/Brant/django-noodles',
     license = 'GPL',
     description = "Half-baked noodles of ideas for little bits of functionality for Django",
@@ -17,7 +17,7 @@ setup(
     zip_safe = False,
 
 
-    install_requires = ['django', ],
+    install_requires = ['django', 'pytz', ],
 
     classifiers = [
         'Development Status :: 2 - Pre-Alpha',

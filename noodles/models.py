@@ -12,6 +12,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import EmailMessage
 from django.conf import settings
+from django.utils.timezone import utc
 
 from noodles.util import get_email_send_to_list, AssetFromImage
 from noodles.asset_handlers import ModelAssetsFromImageHandler
@@ -324,7 +325,10 @@ class TitleDateSlug(LittleSlugger):
         - Slugifies title
         """
         if not self.date:
-            self.date = datetime.now() + timedelta(days=5)
+            if settings.USE_TZ:
+                self.date = datetime.utcnow().replace(tzinfo=utc) + timedelta(days=5)
+            else:
+                self.date = datetime.now() + timedelta(days=5)
 
         super(TitleDateSlug, self).save(*args, **kwargs)
 
