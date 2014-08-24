@@ -14,40 +14,40 @@ def add_mailto_to_string(value, esc=None):
 	"""
 	TODO: Unit Test
 	"""
-    if not esc:
-        esc = lambda x: x
+	if not esc:
+		esc = lambda x: x
 
-    pat = re.compile(r'([A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]+)')
-    value = pat.sub(r"<a href='mailto:\1'>\1</a>", esc(value))
+	pat = re.compile(r'([A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]+)')
+	value = pat.sub(r"<a href='mailto:\1'>\1</a>", esc(value))
 
-    return value
+	return value
 
 
 def add_links_to_string(value, esc=None, extra_class=None):
 	"""
 	TODO: Unit Test
 	"""
-    if not esc:
-        esc = lambda x: x
+	if not esc:
+		esc = lambda x: x
 
-    # find all likely links
-    pat = re.compile(r"((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)*)", re.IGNORECASE | re.DOTALL)
-    value = pat.sub(r"<a target='_blank' href='\1'>\1</a>", esc(value))
+	# find all likely links
+	pat = re.compile(r"((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)*)", re.IGNORECASE | re.DOTALL)
+	value = pat.sub(r"<a target='_blank' href='\1'>\1</a>", esc(value))
 
-    # make sure partial email addresses arent converted to links
-    value = re.sub(r"\@<a target='_blank' href=\'([\w\.]+)\'>([\w\.]+)</a>", r"@\1", value)
-    value = re.sub(r"<a target='_blank' href=\'([\w\.]+)\'>([\w\.]+)</a>\@", r"\1@", value)
+	# make sure partial email addresses arent converted to links
+	value = re.sub(r"\@<a target='_blank' href=\'([\w\.]+)\'>([\w\.]+)</a>", r"@\1", value)
+	value = re.sub(r"<a target='_blank' href=\'([\w\.]+)\'>([\w\.]+)</a>\@", r"\1@", value)
 
-    # make sure phone numbers aren't turned into http hyperlinks
-    value = re.sub(r"<a target='_blank' href=\'([\d\.]+)\'>([\d\.]+)</a>", r"\1", value)
+	# make sure phone numbers aren't turned into http hyperlinks
+	value = re.sub(r"<a target='_blank' href=\'([\d\.]+)\'>([\d\.]+)</a>", r"\1", value)
 
-    # add http anyhwere that it isn't
-    value = re.sub(r"href=\'([^(http)])", r"href='http://\1", value)
+	# add http anyhwere that it isn't
+	value = re.sub(r"href=\'([^(http)])", r"href='http://\1", value)
 
-    if extra_class:
-        value = value.replace("<a target=", "<a class='%s' target=" % extra_class)
+	if extra_class:
+		value = value.replace("<a target=", "<a class='%s' target=" % extra_class)
 
-    return value
+	return value
 
 
 
