@@ -48,6 +48,7 @@ class AssetsFromImagesMixin(models.Model):
         """
         Assign attributes after save
         """
+        self._always_create_assets = kwargs.pop("always_create_assets", False)
 
         # Since this is used as a mixin only,
         # we shouldn't be force inserting anything
@@ -97,7 +98,7 @@ class DefinedWidthsAssetsFromImagesMixin(AssetsFromImagesMixin):
             for width in self.get_dimensions():
                 save_path = os.path.join(settings.MEDIA_ROOT, image_field["path"], str(width), image_field["filename"])
 
-                if not os.path.isfile(save_path):
+                if not os.path.isfile(save_path) or self._always_create_assets:
                     image_field["handler"].create_width(width, save_path)
 
                 this_value = "/" . join([(image_field["path"].lstrip("/").rstrip("/")), str(width), image_field["filename"]])
@@ -131,12 +132,12 @@ class HalfQuarterAssetsMixin(AssetsFromImagesMixin):
             image_field = model_asset_handler._asset_handlers[the_handler]
 
             save_path = os.path.join(settings.MEDIA_ROOT, image_field["path"], "half", image_field["filename"])
-            if not os.path.isfile(save_path):
+            if not os.path.isfile(save_path) or self._always_create_assets:
                 image_field["handler"].create_width(image_field["handler"].original_w / 2, save_path)
             half_value = "/".join([(image_field["path"].lstrip("/").rstrip("/")), "half", image_field["filename"]])
 
             save_path = os.path.join(settings.MEDIA_ROOT, image_field["path"], "quarter", image_field["filename"])
-            if not os.path.isfile(save_path):
+            if not os.path.isfile(save_path) or self._always_create_assets:
                 image_field["handler"].create_width(image_field["handler"].original_w / 4, save_path)
             quarter_value = "/".join([(image_field["path"].lstrip("/").rstrip("/")), "quarter", image_field["filename"]])
 

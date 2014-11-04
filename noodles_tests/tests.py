@@ -155,6 +155,23 @@ class ModelMixinTestCase:
             self.assertEquals(os.path.getctime(test_path), original_time)
 
     @override_settings(MEDIA_ROOT=os.path.join(this_dir, "tmp"))
+    def test_forced_asset_generation(self):
+        """
+        Allow save kwarg to force asset creation
+        """
+        obj = self.mixin_class(some_image="images/happy.png")
+        obj.save()
+
+        for sub in obj.get_asset_paths():
+            test_path = os.path.join(self.save_dir, sub, "happy.png")
+            original_time = os.path.getctime(test_path)
+
+            time.sleep(2)
+            obj.save(always_create_assets=True)
+
+            self.assertNotEquals(os.path.getctime(test_path), original_time)
+
+    @override_settings(MEDIA_ROOT=os.path.join(this_dir, "tmp"))
     def test_saving_assets(self):
         """
         See if we can save some assets
