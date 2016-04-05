@@ -10,4 +10,6 @@ env:
 install:
     - pip install $DJANGO
     - pip install -r noodles_tests/requirements.txt
+script: coverage run --rcfile=.coveragerc noodles_tests/runtests.py 
 sudo: false
+after_success: coveralls

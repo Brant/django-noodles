@@ -1,5 +1,7 @@
 Noodles for Django
 ==============
+[![Build Status](https://travis-ci.org/Brant/django-noodles.svg?branch=master)](https://travis-ci.org/Brant/django-noodles)
+
 Noodles is an app containing all sorts of misc. bits of code that I see to use across projects.
 
 There aren't really any connecting dots or common design patterns. It's just stuff I use.
