@@ -150,7 +150,7 @@ class ModelMixinTestCase:
             original_time = os.path.getmtime(test_path)
 
             time.sleep(4)
-            # obj.save()
+            obj.save()
 
             self.assertEquals(os.path.getmtime(test_path), original_time)
 
