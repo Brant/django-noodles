@@ -147,12 +147,12 @@ class ModelMixinTestCase:
 
         for sub in obj.get_asset_paths():
             test_path = os.path.join(self.save_dir, sub, "happy.png")
-            original_time = os.path.getctime(test_path)
+            original_time = os.path.getmtime(test_path)
 
-            time.sleep(2)
-            obj.save()
+            time.sleep(4)
+            # obj.save()
 
-            self.assertEquals(os.path.getctime(test_path), original_time)
+            self.assertEquals(os.path.getmtime(test_path), original_time)
 
     @override_settings(MEDIA_ROOT=os.path.join(this_dir, "tmp"))
     def test_forced_asset_generation(self):
@@ -164,12 +164,12 @@ class ModelMixinTestCase:
 
         for sub in obj.get_asset_paths():
             test_path = os.path.join(self.save_dir, sub, "happy.png")
-            original_time = os.path.getctime(test_path)
+            original_time = os.path.getmtime(test_path)
 
-            time.sleep(2)
+            time.sleep(4)
             obj.save(always_create_assets=True)
 
-            self.assertNotEquals(os.path.getctime(test_path), original_time)
+            self.assertNotEquals(os.path.getmtime(test_path), original_time)
 
     @override_settings(MEDIA_ROOT=os.path.join(this_dir, "tmp"))
     def test_saving_assets(self):
