@@ -1,6 +1,6 @@
 Noodles for Django
 ==============
-[![Build Status](https://travis-ci.org/Brant/django-noodles.svg?branch=master)](https://travis-ci.org/Brant/django-noodles)
+[![Build Status](https://travis-ci.org/Brant/django-noodles.svg?branch=master)](https://travis-ci.org/Brant/django-noodles) [![Coverage Status](https://coveralls.io/repos/github/Brant/django-noodles/badge.svg?branch=master)](https://coveralls.io/github/Brant/django-noodles?branch=master)
 
 Noodles is an app containing all sorts of misc. bits of code that I see to use across projects.
 
