@@ -1,8 +1,4 @@
-django<1.7
+django<1.10
 coverage
-django_nose
-nose
-nose_exclude
-nosexcover
-pil
-# pillow (also runs on pillow)
+coveralls
+pillow
